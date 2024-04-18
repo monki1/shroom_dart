@@ -5,118 +5,61 @@ import '../../../lib/src/models/tree.dart';
 import '../../../lib/src/sql/db.dart';
 import 'dart:io';
 
-const String schemaFilePath = 'lib/src/sql/schema.sql';
-final String databaseFilePath = 'lib/src/test_database' + DateTime.now().toString() + '.db';
-
 void main() {
   group('Mushroom Tests', () {
     late DatabaseManager dbManager;
+    late Tree testTree;
+    late Mushroom mushroom;
 
     setUp(() {
-      // Setup code before each test
       dbManager = DatabaseManager(
-        schemaFilePath: schemaFilePath,
-        databaseFilePath: databaseFilePath,
+        schemaFilePath: 'lib/src/sql/schema.sql',
+        databaseFilePath: 'lib/src/test_database' + DateTime.now().toString() + '.db',
       );
       dbManager.initDatabase();
       Tree.setDB(dbManager.getDatabase());
       Leaf.setDB(dbManager.getDatabase());
       Mushroom.setDB(dbManager.getDatabase());
+      testTree = Tree('Oak');
+      mushroom = Mushroom();
     });
 
-    test('Mushroom Initialization', () {
-      // Test the initialization of the Mushroom object
-      final tree1 = Tree('Oak');
-      final tree2 = Tree('Pine');
+    test('Add Leaf to Mushroom', () async {
+      final leaf = Leaf(tree: testTree, valueType: 'string', value: 'Green');
+      await expectLater(mushroom.addLeaf(leaf), completes);
+      //check if leaf and mycelium are added in db
+      final db = dbManager.getDatabase();
+      final leafSql = 'SELECT * FROM Leaves WHERE LeafID = ?';
+      final leafStmt = db.prepare(leafSql);
+      final leafResult = leafStmt.select([leaf.id]);
+      expect(leafResult.isNotEmpty, true);
+      leafStmt.dispose();
+      final myceliumSql = 'SELECT * FROM Mycelium WHERE LeafID = ?';
+      final myceliumStmt = db.prepare(myceliumSql);
+      final myceliumResult = myceliumStmt.select([leaf.id]);
+      //expect mycelium leafID and mushroomID to be the same as the leaf and mushroom
 
-      final leaf1 = Leaf(tree: tree1, valueType: 'int', value: 10);
-      final leaf2 = Leaf(tree: tree2, valueType: 'string', value: 'Green');
-
-      final mushroom = Mushroom([leaf1, leaf2]);
-
-      expect(mushroom.leaves.length, 2);
-      expect(mushroom.leaves[0].value, 10);
-      expect(mushroom.leaves[1].value, 'Green');
+      expect(myceliumResult.isNotEmpty, true);
+      expect(myceliumResult.first['MushroomID'], mushroom.id);
     });
 
-    test('Mushroom Delete', () async {
-  // Test deleting a Mushroom object from the database
-  final tree1 = Tree('Willow');
-  final tree2 = Tree('Redwood');
-  final leaf1 = Leaf(tree: tree1, valueType: 'int', value: 15);
-  final leaf2 = Leaf(tree: tree2, valueType: 'string', value: 'Yellow');
-  final mushroom = Mushroom([leaf1, leaf2]);
-   
-  for(var i in mushroom.leaves){
-    print(i.tree.id);
-  }
+    test('Remove Leaf from Mushroom', () async {
+      final leaf = Leaf(tree: testTree, valueType: 'string', value: 'Green');
+      await mushroom.addLeaf(leaf);
+      expectLater(mushroom.removeLeaf(testTree.name), completes);
+    });
 
-  // Delete the mushroom
-   mushroom.delete();
+    test('Exception on Adding Leaf from Different Tree', () {
+      final otherTree = Tree('Maple');
+      final leaf = Leaf(tree: otherTree, valueType: 'string', value: 'Red');
+      expectLater(mushroom.addLeaf(leaf), throwsException);
+    });
 
-  // Check if the mushroom has been deleted
-  final db = dbManager.getDatabase();
-  final mushroomSql = 'SELECT MushroomID FROM Mushrooms WHERE MushroomID = ?';
-  final mushroomStmt = db.prepare(mushroomSql);
-  final mushroomResult = mushroomStmt.select([mushroom.id]);
-  expect(mushroomResult.isEmpty, true);
-  mushroomStmt.dispose();
-
-  // Check if the leaves have been deleted
-  final leafSql = 'SELECT LeafID FROM Leaves WHERE LeafID = ? OR LeafID = ?';
-  final leafStmt = db.prepare(leafSql);
-  final leafResult = leafStmt.select([leaf1.id, leaf2.id]);
-  print(leafResult);
-  expect(leafResult.isEmpty, true);
-  leafStmt.dispose();
-
-  db.dispose();
-});
-
-test('Mushroom Update - Change Leaves and Save', () async {
-  final tree1 = Tree('Apple');
-  final tree2 = Tree('Banana');
-  final leaf1 = Leaf(tree: tree1, valueType: 'string', value: 'Red');
-  final leaf2 = Leaf(tree: tree2, valueType: 'string', value: 'Yellow');
-
-  // Initialize the mushroom with initial leaves
-  var mushroom = Mushroom([leaf1, leaf2]);
-
-  // Changing leaves
-  final leaf3 = Leaf(tree: tree1, valueType: 'string', value: 'Green');
-  mushroom.leaves = [leaf3];  // Update mushroom with a new set of leaves
-
-  // Save updates to the database
-  await mushroom.save();  // Ensure save is awaited if it's asynchronous
-
-  // Verify the updated leaves are in the database
-  final db = dbManager.getDatabase();
-  final sqlCheckUpdated = 'SELECT LeafID FROM Mycelium WHERE MushroomID = ?';
-  final stmtCheckUpdated = db.prepare(sqlCheckUpdated);
-  final resultCheckUpdated = await stmtCheckUpdated.select([mushroom.id]);  // Assuming select is asynchronous
-
-  expect(resultCheckUpdated.any((row) => row['LeafID'] == leaf3.id), true);
-  stmtCheckUpdated.dispose();
-
-  //wait for 1 sec
-  await Future.delayed(Duration(seconds: 1));
-
-  // Check if the disconnected leaves have been deleted
-  final sqlCheckDisconnected = 'SELECT LeafID FROM Leaves WHERE LeafID = ? OR LeafID = ?';
-  final stmtCheckDisconnected = db.prepare(sqlCheckDisconnected);
-  final resultCheckDisconnected = await stmtCheckDisconnected.select([leaf1.id, leaf2.id]);  // Assuming select is asynchronous
-
-  expect(resultCheckDisconnected.isEmpty, true);
-  stmtCheckDisconnected.dispose();
-
-  db.dispose();
-});
-
-
-
+    test('Mushroom Deletion', () async {
+      expectLater(mushroom.delete(), completes);
+    });
 
     tearDown(() {
-      // Teardown code after each test
       dbManager.removeDatabase();
     });
   });

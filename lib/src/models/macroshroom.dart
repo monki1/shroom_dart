@@ -10,11 +10,13 @@ class MacroShroom extends Mushroom {
     _db = db;
   }
 
-  MacroShroom(this.name, List<Leaf> leaves) : super(leaves);
+  MacroShroom(this.name): super(){
+    setName(name);
+  }
 
-@override
-Future<void> save() async {
-  super.save();
+
+void setName(String name) async {
+  this.name = name.trim();
 
   // Prepare the SQL queries for checking, inserting, and updating
   final checkSql = 'SELECT MushroomID FROM $tableName WHERE Name = ?';
@@ -56,8 +58,8 @@ Future<void> save() async {
 }
 
 
-  @override
-  void delete() {
+
+  void deleteName() {
     super.delete();
     final deleteSql = 'DELETE FROM $tableName WHERE MushroomID = ?';
     final deleteStmt = _db!.prepare(deleteSql);

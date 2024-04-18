@@ -105,7 +105,7 @@ class Leaf {
             Tree treeObj = Tree.getTreeById(this.tree.id!)!;
             treeObj.delete();
 
-            print('Leaf deleted'+id.toString());
+            print('Leaf deleted '+id.toString());
     return;
   }
 }

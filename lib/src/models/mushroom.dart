@@ -2,121 +2,137 @@ import 'package:sqlite3/sqlite3.dart';
 import 'leaf.dart';
 import 'tree.dart';
 
+
 class Mushroom {
-  List<Leaf> leaves;
+  List<Leaf> _leaves=[];
   int? id;
   static String tableName = 'Mushrooms';
   static Database? _db;
 
-  Mushroom(this.leaves) {
-    _checkLeavesFromDifferentTrees();
-    save();
+  Mushroom() {
+    _checkAndCreateId();
   }
 
   static void setDB(Database db) {
     _db = db;
   }
 
-  void _checkLeavesFromDifferentTrees() {
-    final treeNames = leaves.map((leaf) => leaf.tree.name).toSet();
-    if (treeNames.length != leaves.length) {
-      throw ArgumentError('One mushroom can only have one leaf from each tree.');
-    }
-  }
-
-  void _checkAndCreateId() {
+  static Mushroom getMushroomById(int mushroomId) {
     if (_db == null) {
       throw Exception('Database not set.');
     }
 
-    if (id == null) {
-      final insertSql = 'INSERT INTO $tableName DEFAULT VALUES';
-      final insertStmt = _db!.prepare(insertSql);
-      insertStmt.execute();
-      id = _db!.lastInsertRowId;
-      insertStmt.dispose();
-    }
-  }
+    final sql = 'SELECT MushroomID FROM $tableName WHERE MushroomID = ?';
+    final stmt = _db!.prepare(sql);
+    final result = stmt.select([mushroomId]);
+    if (result.isNotEmpty) {
+      final mushroom = Mushroom();
+      mushroom.id = result.first['MushroomID'] as int;
+      stmt.dispose();
 
-  Set<int> _getExistingLeafIds() {
-    final existingLeavesQuery = 'SELECT LeafID FROM Mycelium WHERE MushroomID = ?';
-    final existingLeavesStmt = _db!.prepare(existingLeavesQuery);
-    final existingLeavesResult = existingLeavesStmt.select([id]);
-    final existingLeafIds = existingLeavesResult.map((row) => row['LeafID'] as int).toSet();
-    existingLeavesStmt.dispose();
-    return existingLeafIds;
-  }
-
-  void _insertIntoMycelium(int leafId)  {
-    final myceliumInsertSql = 'INSERT INTO Mycelium (MushroomID, LeafID) VALUES (?, ?)';
-    final myceliumInsertStmt = _db!.prepare(myceliumInsertSql);
-    myceliumInsertStmt.execute([id, leafId]);
-    myceliumInsertStmt.dispose();
-  }
-
-  void _deleteFromMycelium(int leafId)  {
-    final myceliumDeleteSql = 'DELETE FROM Mycelium WHERE MushroomID = ? AND LeafID = ?';
-    final myceliumDeleteStmt = _db!.prepare(myceliumDeleteSql);
-    myceliumDeleteStmt.execute([id, leafId]);
-    myceliumDeleteStmt.dispose();
-  }
-
-  Future<void> save() async {
-    _checkAndCreateId();
-    if (_db == null) {
-      throw Exception('Database not set.');
-    }
-    if (id == null) {
-      throw Exception('Mushroom ID not set.');
-    }
-
-    final existingLeafIds = _getExistingLeafIds();
-
-    for (var leaf in leaves) {
-      if (!existingLeafIds.contains(leaf.id)) {
-        _insertIntoMycelium(leaf.id!);
+      // Get the leaves
+      final myceliumSql = 'SELECT LeafID FROM Mycelium WHERE MushroomID = ?';
+      final myceliumStmt = _db!.prepare(myceliumSql);
+      final myceliumResult = myceliumStmt.select([mushroomId]);
+      for (var row in myceliumResult) {
+        final leaf = Leaf.getLeafById(row['LeafID'] as int);
+        mushroom._leaves.add(leaf);
       }
-      existingLeafIds.remove(leaf.id);
-    }
+      myceliumStmt.dispose();
 
-    for (var leafId in existingLeafIds) {
-      _deleteFromMycelium(leafId);
-      final leaf = Leaf.getLeafById(leafId);
-       leaf.delete();
+      return mushroom;
+    } else {
+      throw Exception('Mushroom not found');
     }
   }
 
-  void delete() {
-    if (_db == null) {
-      throw Exception('Database not set.');
-    }
-    if (id == null) {
-      throw Exception('Mushroom ID not set.');
-    }
+  
 
-    // Retrieve all leaves associated with this mushroom
-    final myceliumQuery = 'SELECT LeafID FROM Mycelium WHERE MushroomID = ?';
-    final myceliumStmt = _db!.prepare(myceliumQuery);
-    final myceliumResult = myceliumStmt.select([id]);
-    myceliumStmt.dispose();
-
-    // Delete each leaf
-    for (var row in myceliumResult) {
-      final leafId = row['LeafID'] as int;
-      final leaf = Leaf.getLeafById(leafId);
-      leaf.delete();
-    }
-
-    // Delete all mycelium entries associated with this mushroom
-    final myceliumDeleteSql = 'DELETE FROM Mycelium WHERE MushroomID = ?';
-    final myceliumDeleteStmt = _db!.prepare(myceliumDeleteSql);
-    myceliumDeleteStmt.execute([id]);
-    myceliumDeleteStmt.dispose();
-
-    // Delete the mushroom from the Mushrooms table
-    final mushroomDeleteSql = 'DELETE FROM Mushrooms WHERE MushroomID = ?';
-    final mushroomDeleteStmt = _db!.prepare(mushroomDeleteSql);
-    mushroomDeleteStmt.execute([id]);
-    mushroomDeleteStmt.dispose();
+  Future<void> _addMycelium(Leaf leaf) async {
+    // add mycelium to the database
+    final insertSql = 'INSERT INTO Mycelium (MushroomID, LeafID) VALUES (?, ?)';
+    final insertStmt = _db!.prepare(insertSql);
+    // await insertStmt.execute([id, leaf.id]);
+    insertStmt.execute([id, leaf.id]);
+    // print('Mycelium added');
   }
+  Future<void> _removeMycelium(Leaf leaf) async {
+    // remove mycelium from the database
+    final deleteSql = 'DELETE FROM Mycelium WHERE MushroomID = ? AND LeafID = ?';
+    final deleteStmt = _db!.prepare(deleteSql);
+    deleteStmt.execute([id, leaf.id]);
+  }
+
+  //IMPLEMENT : function addLeaf(Leaf): check if leaf from the same tree exists. if yes then remove the previous leaf first, add mycelium to the database,
+  Future<void> addLeaf(Leaf leaf) async {
+    // Check if the leaf is from the same tree
+    if (leaf.tree.id != id) {
+      throw Exception('Leaf is not from the same tree');
+    }
+
+    // Check if the leaf is already added
+    if (_leaves.contains(leaf)) {
+      return;
+    }
+
+    //check if leaf from the same tree exists. if yes then remove the previous leaf first
+    for (var i = 0; i < _leaves.length; i++) {
+      if (_leaves[i].tree.id == leaf.tree.id) {
+        await _removeMycelium(_leaves[i]);
+        _leaves.removeAt(i);
+        break;
+      }
+    }
+
+    // Add the leaf
+    _leaves.add(leaf);
+    await _addMycelium(leaf);
+  }
+
+
+  //IMPLEMENT : function removeLeaf(TreeName String): 
+  Future<void> removeLeaf(String treeName) async {
+  // Attempt to find a leaf associated with the given tree name
+  //if no leaf of that tree name is found, throw an exception
+  Leaf? targetLeaf = _leaves.firstWhere(
+    (leaf) => leaf.tree.name == treeName,
+  );
+
+  if (targetLeaf != null) {
+    await _removeMycelium(targetLeaf);
+    _leaves.remove(targetLeaf);
+  } else {
+    throw Exception('Leaf with tree name "$treeName" not found');
+  }
+}
+
+
+void _checkAndCreateId() {
+  if (_db == null) {
+    throw Exception('Database not set.');
+  }
+
+  if (id == null) {
+    final insertSql = 'INSERT INTO $tableName DEFAULT VALUES';
+    final insertStmt = _db!.prepare(insertSql);
+    insertStmt.execute();
+    id = _db!.lastInsertRowId;
+    insertStmt.dispose();
+  }
+}
+
+
+
+
+Future<void> delete() async {
+  for (var leaf in _leaves) {
+    await _removeMycelium(leaf);  // Assuming this could be changed to async
+    leaf.delete();
+  }
+  final deleteSql = 'DELETE FROM $tableName WHERE MushroomID = ?';
+  final deleteStmt = _db!.prepare(deleteSql);
+  deleteStmt.execute([id]);
+  deleteStmt.dispose();
+}
+
 }
