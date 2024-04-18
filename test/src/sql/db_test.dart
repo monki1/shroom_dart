@@ -29,11 +29,12 @@ void main() {
       final db = dbManager.getDatabase();
       expect(db, isNotNull);
       db.dispose();
+      dbManager.removeDatabase();
     });
 
     test('Remove Database', () {
       // Test removing the database
-      dbManager.initDatabase();
+      dbManager.getDatabase();
       dbManager.removeDatabase();
       final dbFile = File(dbManager.databaseFilePath);
       expect(dbFile.existsSync(), false);
@@ -41,7 +42,7 @@ void main() {
 
     tearDown(() {
       // Teardown code after each test
-      dbManager.removeDatabase();
+      // dbManager.removeDatabase();
     });
   });
 }
