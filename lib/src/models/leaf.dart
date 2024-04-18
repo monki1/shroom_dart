@@ -62,7 +62,7 @@ class Leaf {
     }
   }
 
-  Future<void> save() async {
+  void save()  {
     _checkAndCreateId();
     if (_db == null) {
       throw Exception('Database not set.');
@@ -96,7 +96,7 @@ class Leaf {
     return;
   }
 
-  Future<void> delete() async {
+  void delete()  {
   //shoulf be deleted iff no mycelium associates
     final sql = 'SELECT COUNT(*) FROM Mycelium WHERE LeafID = ?';
     final stmt = _db!.prepare(sql);
