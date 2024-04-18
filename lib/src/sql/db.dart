@@ -35,7 +35,7 @@ class DatabaseManager {
     try {
       final db = sqlite3.open(dbPath);
       db.execute(schema);
-      print('Database initialized successfully. Database file: $dbPath');
+      // print('Database initialized successfully. Database file: $dbPath');
       db.dispose();
     } catch (e) {
       print('Error initializing database: $e');
@@ -55,7 +55,7 @@ class DatabaseManager {
     final file = File(dbPath);
     if (file.existsSync()) {
       file.delete();
-      print('Database removed successfully. Database file: $dbPath');
+      // print('Database removed successfully. Database file: $dbPath');
     } else {
       print('Database does not exist. No action taken.');
     }

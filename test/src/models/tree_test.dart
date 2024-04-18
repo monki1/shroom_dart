@@ -22,14 +22,8 @@ void main() {
 
     test('Tree Initialization', () {
       // Test the initialization of the Tree object.
-      final tree = Tree('Oak');
-      expect(tree.name, 'Oak');
-    });
-
-    test('Tree Save', () {
       // Test saving a Tree object to the database.
       final tree = Tree('Pine');
-      tree.save();
 
       final db = dbManager.getDatabase();
       final sql = 'SELECT Name FROM Trees WHERE TreeID = ?';
@@ -44,7 +38,7 @@ void main() {
     test('Tree Delete', ()  {
       // Test deleting a Tree object from the database.
       final tree = Tree('Maple');
-      tree.save();
+      
 
       tree.delete();
 
@@ -57,10 +51,10 @@ void main() {
       db.dispose();
     });
 
-    test('Tree Delete With Leaves', ()  {
+    test('Tree Should NOT Delete With Leaves', ()  {
       // Test that a Tree object with leaves cannot be deleted.
       final tree = Tree('Birch');
-      tree.save();
+      
 
       // Add a leaf to the tree
       final leafSql = 'INSERT INTO Leaves (TreeID, ValueType, StringValue) VALUES (?, ?, ?)';
@@ -89,7 +83,7 @@ void main() {
     test('Get Tree By ID', () {
       // Test retrieving a Tree object by ID.
       final tree = Tree('Willow');
-      tree.save();
+      
 
       final retrievedTree = Tree.getTreeById(tree.id!);
       expect(retrievedTree, isNotNull);

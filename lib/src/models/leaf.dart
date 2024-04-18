@@ -15,7 +15,8 @@ class Leaf {
     if (!valueTypes.contains(valueType)) {
       throw ArgumentError('Invalid value type');
     }
-    this.tree.save();
+    _save();
+
   }
 
   static Leaf getLeafById(int leafId) {
@@ -62,7 +63,7 @@ class Leaf {
     }
   }
 
-  void save()  {
+  void _save()  {
     _checkAndCreateId();
     if (_db == null) {
       throw Exception('Database not set.');
@@ -97,26 +98,29 @@ class Leaf {
   }
 
   void delete()  {
-  //shoulf be deleted iff no mycelium associates
-    final sql = 'SELECT COUNT(*) FROM Mycelium WHERE LeafID = ?';
-    final stmt = _db!.prepare(sql);
-    final result = stmt.select([id]);
-    if (result.isNotEmpty) {
-        if (result.first['COUNT(*)'] as int > 0) {
-            // throw Exception('Leaf still has mycelium');
-        } else {
+  // //shoulf be deleted iff no mycelium associates
+  //   final sql = 'SELECT COUNT(*) FROM Mycelium WHERE LeafID = ?';
+  //   final stmt = _db!.prepare(sql);
+  //   final result = stmt.select([id]);
+  //   if (result.isNotEmpty) {
+  //       if (result.first['COUNT(*)'] as int > 0) {
+  //           // throw Exception('Leaf still has mycelium');
+  //       } else {
             // Delete the leaf
+
             final deleteSql = 'DELETE FROM $tableName WHERE LeafID = ?';
             final deleteStmt = _db!.prepare(deleteSql);
             deleteStmt.execute([id]);
             deleteStmt.dispose();
 
-            print(this.tree.id);
+            // print(this.tree.id);
 
             Tree treeObj = Tree.getTreeById(this.tree.id!)!;
             treeObj.delete();
-        }
-    }
+
+            print('Leaf deleted'+id.toString());
+    //     }
+    // }
     return;
   }
 }

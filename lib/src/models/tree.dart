@@ -10,7 +10,9 @@ class Tree {
     _db = db;
   }
 
-  Tree(this.name);
+  Tree(this.name){
+    _save();
+  }
 
 
 
@@ -36,7 +38,7 @@ class Tree {
     }
   }
 
-  void save()  {
+  void _save()  {
     _checkAndCreateId();
   }
 

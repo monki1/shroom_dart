@@ -3,7 +3,7 @@ import '../../../lib/src/sql/db.dart';
 import 'dart:io';
 
 const String schemaFilePath = 'lib/src/sql/schema.sql';
-final String databaseFilePath = 'lib/src/test_database' + DateTime.now().toString() + '.db';
+final String databaseFilePath = 'test_database' + DateTime.now().toString() + '.db';
 
 void main() {
   group('DatabaseManager Tests', () {
@@ -17,12 +17,12 @@ void main() {
       );
     });
 // THIS IS INCLUDED IN GET DATABASE TEST
-    test('Database Initialization', () {
-      // Test the initialization of the database
-      dbManager.initDatabase();
-      final dbFile = File(dbManager.databaseFilePath);
-      expect(dbFile.existsSync(), true);
-    });
+    // test('Database Initialization', () {
+    //   // Test the initialization of the database
+    //   dbManager.initDatabase();
+    //   final dbFile = File(dbManager.databaseFilePath);
+    //   expect(dbFile.existsSync(), true);
+    // });
 
     test('Get Database', () {
       // Test getting the database
@@ -32,12 +32,12 @@ void main() {
       dbManager.removeDatabase();
     });
 
-    test('Remove Database', () {
+    test('Remove Database', () async {
       // Test removing the database
       dbManager.getDatabase();
       dbManager.removeDatabase();
       final dbFile = File(dbManager.databaseFilePath);
-      expect(dbFile.existsSync(), false);
+      expect( await dbFile.exists(), false);
     });
 
     tearDown(() {
