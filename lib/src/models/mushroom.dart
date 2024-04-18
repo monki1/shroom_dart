@@ -61,7 +61,7 @@ class Mushroom {
     myceliumDeleteStmt.dispose();
   }
 
-  void save() {
+  Future<void> save() async {
     _checkAndCreateId();
     if (_db == null) {
       throw Exception('Database not set.');

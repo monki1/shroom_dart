@@ -68,10 +68,51 @@ void main() {
   final leafResult = leafStmt.select([leaf1.id, leaf2.id]);
   print(leafResult);
   expect(leafResult.isEmpty, true);
-//   leafStmt.dispose();
+  leafStmt.dispose();
 
-//   db.dispose();
+  db.dispose();
 });
+
+test('Mushroom Update - Change Leaves and Save', () async {
+  final tree1 = Tree('Apple');
+  final tree2 = Tree('Banana');
+  final leaf1 = Leaf(tree: tree1, valueType: 'string', value: 'Red');
+  final leaf2 = Leaf(tree: tree2, valueType: 'string', value: 'Yellow');
+
+  // Initialize the mushroom with initial leaves
+  var mushroom = Mushroom([leaf1, leaf2]);
+
+  // Changing leaves
+  final leaf3 = Leaf(tree: tree1, valueType: 'string', value: 'Green');
+  mushroom.leaves = [leaf3];  // Update mushroom with a new set of leaves
+
+  // Save updates to the database
+  await mushroom.save();  // Ensure save is awaited if it's asynchronous
+
+  // Verify the updated leaves are in the database
+  final db = dbManager.getDatabase();
+  final sqlCheckUpdated = 'SELECT LeafID FROM Mycelium WHERE MushroomID = ?';
+  final stmtCheckUpdated = db.prepare(sqlCheckUpdated);
+  final resultCheckUpdated = await stmtCheckUpdated.select([mushroom.id]);  // Assuming select is asynchronous
+
+  expect(resultCheckUpdated.any((row) => row['LeafID'] == leaf3.id), true);
+  stmtCheckUpdated.dispose();
+
+  //wait for 1 sec
+  await Future.delayed(Duration(seconds: 1));
+
+  // Check if the disconnected leaves have been deleted
+  final sqlCheckDisconnected = 'SELECT LeafID FROM Leaves WHERE LeafID = ? OR LeafID = ?';
+  final stmtCheckDisconnected = db.prepare(sqlCheckDisconnected);
+  final resultCheckDisconnected = await stmtCheckDisconnected.select([leaf1.id, leaf2.id]);  // Assuming select is asynchronous
+
+  expect(resultCheckDisconnected.isEmpty, true);
+  stmtCheckDisconnected.dispose();
+
+  db.dispose();
+});
+
+
 
 
     tearDown(() {

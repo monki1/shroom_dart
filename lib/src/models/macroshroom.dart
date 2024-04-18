@@ -13,7 +13,7 @@ class MacroShroom extends Mushroom {
   MacroShroom(this.name, List<Leaf> leaves) : super(leaves);
 
 @override
-void save() {
+Future<void> save() async {
   super.save();
 
   // Prepare the SQL queries for checking, inserting, and updating
