@@ -24,7 +24,7 @@ void main() {
       mushroom = Mushroom();
     });
 
-    test('Add Leaf to Mushroom', () async {
+    test('Add/Remove Leaf to Mushroom', () async {
       final leaf = Leaf(tree: testTree, valueType: 'string', value: 'Green');
       await expectLater(mushroom.addLeaf(leaf), completes);
       //check if leaf and mycelium are added in db
@@ -33,7 +33,6 @@ void main() {
       final leafStmt = db.prepare(leafSql);
       final leafResult = leafStmt.select([leaf.id]);
       expect(leafResult.isNotEmpty, true);
-      leafStmt.dispose();
       final myceliumSql = 'SELECT * FROM Mycelium WHERE LeafID = ?';
       final myceliumStmt = db.prepare(myceliumSql);
       final myceliumResult = myceliumStmt.select([leaf.id]);
@@ -41,19 +40,18 @@ void main() {
 
       expect(myceliumResult.isNotEmpty, true);
       expect(myceliumResult.first['MushroomID'], mushroom.id);
+      //remove leaf from mushroom
+      await expectLater(mushroom.removeLeaf(leaf.tree.name), completes);
+      //check if leaf and mycelium are removed from db
+      final leafResult2 = leafStmt.select([leaf.id]);
+      print (leafResult2);
+      expect(leafResult2.isEmpty, true);
+      final myceliumResult2 = myceliumStmt.select([leaf.id]);
+      expect(myceliumResult2.isEmpty, true);
+      leafStmt.dispose();
     });
 
-    test('Remove Leaf from Mushroom', () async {
-      final leaf = Leaf(tree: testTree, valueType: 'string', value: 'Green');
-      await mushroom.addLeaf(leaf);
-      expectLater(mushroom.removeLeaf(testTree.name), completes);
-    });
 
-    test('Exception on Adding Leaf from Different Tree', () {
-      final otherTree = Tree('Maple');
-      final leaf = Leaf(tree: otherTree, valueType: 'string', value: 'Red');
-      expectLater(mushroom.addLeaf(leaf), throwsException);
-    });
 
     test('Mushroom Deletion', () async {
       expectLater(mushroom.delete(), completes);

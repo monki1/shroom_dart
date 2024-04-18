@@ -101,6 +101,7 @@ class Mushroom {
   if (targetLeaf != null) {
     await _removeMycelium(targetLeaf);
     _leaves.remove(targetLeaf);
+    targetLeaf.delete();
   } else {
     throw Exception('Leaf with tree name "$treeName" not found');
   }
