@@ -55,6 +55,16 @@ void main() {
 
     test('Mushroom Deletion', () async {
       expectLater(mushroom.delete(), completes);
+      final db = dbManager.getDatabase();
+      final mushroomSql = 'SELECT * FROM Mushrooms WHERE MushroomID = ?';
+      final mushroomStmt = db.prepare(mushroomSql);
+      final mushroomResult = mushroomStmt.select([mushroom.id]);
+      expect(mushroomResult.isEmpty, true);
+      final myceliumSql = 'SELECT * FROM Mycelium WHERE MushroomID = ?';
+      final myceliumStmt = db.prepare(myceliumSql);
+      final myceliumResult = myceliumStmt.select([mushroom.id]);
+      expect(myceliumResult.isEmpty, true);
+      mushroomStmt.dispose();
     });
 
     tearDown(() {
