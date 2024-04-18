@@ -3,7 +3,7 @@ import '../../../lib/src/sql/db.dart';
 import 'dart:io';
 
 const String schemaFilePath = 'lib/src/sql/schema.sql';
-const String databaseFilePath = 'test_database.db';
+final String databaseFilePath = 'lib/src/test_database' + DateTime.now().toString() + '.db';
 
 void main() {
   group('DatabaseManager Tests', () {
