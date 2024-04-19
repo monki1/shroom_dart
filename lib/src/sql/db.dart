@@ -61,21 +61,5 @@ class DatabaseManager {
     }
   }
 
-  /// Asynchronously deletes mushrooms that are not referenced in MacroShroomNames and not associated with any leaf in Mycelium.
-  void prune() {
-    final db = getDatabase();
-    try {
-      const sql = '''
-        DELETE FROM Mushrooms
-        WHERE MushroomID NOT IN (SELECT MushroomID FROM MacroShroomNames)
-        AND MushroomID NOT IN (SELECT MushroomID FROM Mycelium);
-      ''';
-      db.execute(sql); // Using executeAsync if supported, or handle the async operation differently
-      print('Pruning complete: Unreferenced mushrooms have been deleted.');
-    } catch (e) {
-      print('Error during pruning: $e');
-    } finally {
-      db.dispose();
-    }
-  }
+
 }
