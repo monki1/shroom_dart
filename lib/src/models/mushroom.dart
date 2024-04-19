@@ -5,46 +5,42 @@ import 'tree.dart';
 
 class Mushroom {
   List<Leaf> _leaves=[];
+  List<Leaf> get leaves => _leaves;
   int? id;
   static String tableName = 'Mushrooms';
   static Database? _db;
 
-  Mushroom() {
-    _checkAndCreateId();
+  Mushroom({int? id=null}) {
+    if (id != null) {
+      this.id = id;
+      _loadLeaves();
+
+    } else {
+      _checkAndCreateId();
+    }
   }
 
   static void setDB(Database db) {
     _db = db;
   }
 
-  static Mushroom getMushroomById(int mushroomId) {
-    if (_db == null) {
-      throw Exception('Database not set.');
+  void _loadLeaves() {
+    print('Loading leaves');
+    final selectSql = 'SELECT LeafID FROM Mycelium WHERE MushroomID = ?';
+    final selectStmt = _db!.prepare(selectSql);
+    final results = selectStmt.select([id]);
+
+    print(results );
+    
+
+    for (var result in results) {
+      final leafId = result['LeafID'] as int;
+      final leaf = Leaf.getLeafById(leafId);
+      _leaves.add(leaf);
     }
-
-    final sql = 'SELECT MushroomID FROM $tableName WHERE MushroomID = ?';
-    final stmt = _db!.prepare(sql);
-    final result = stmt.select([mushroomId]);
-    if (result.isNotEmpty) {
-      final mushroom = Mushroom();
-      mushroom.id = result.first['MushroomID'] as int;
-      stmt.dispose();
-
-      // Get the leaves
-      final myceliumSql = 'SELECT LeafID FROM Mycelium WHERE MushroomID = ?';
-      final myceliumStmt = _db!.prepare(myceliumSql);
-      final myceliumResult = myceliumStmt.select([mushroomId]);
-      for (var row in myceliumResult) {
-        final leaf = Leaf.getLeafById(row['LeafID'] as int);
-        mushroom._leaves.add(leaf);
-      }
-      myceliumStmt.dispose();
-
-      return mushroom;
-    } else {
-      throw Exception('Mushroom not found');
-    }
+    selectStmt.dispose();
   }
+
 
   
 
@@ -128,7 +124,7 @@ void _checkAndCreateId() {
 Future<void> delete() async {
   for (var leaf in _leaves) {
     await _removeMycelium(leaf);  // Assuming this could be changed to async
-    leaf.delete();
+     leaf.delete();
   }
   final deleteSql = 'DELETE FROM $tableName WHERE MushroomID = ?';
   final deleteStmt = _db!.prepare(deleteSql);

@@ -11,27 +11,52 @@ class Leaf {
   static String tableName = 'Leaves';
   static Database? _db;
 
-  Leaf({required this.tree, required this.valueType, this.value}) {
+  Leaf({required this.tree, required this.valueType, this.value, int? id = null}) {
+    
     if (!valueTypes.contains(valueType)) {
       throw ArgumentError('Invalid value type');
     }
-    _save();
+    if (id != null) {
+      this.id = id;
+      
+    }else{
+      _save();
+    }
+
 
   }
 
   static Leaf getLeafById(int leafId) {
-    if (_db == null) {
-      throw Exception('Database not set.');
-    }
-
+    //get tTree, tValueType, tValue from Leaves where LeafID = leafId
     final sql = 'SELECT TreeID, ValueType, IntValue, FloatValue, StringValue, MushroomValue, SpellValue, BinaryValue FROM $tableName WHERE LeafID = ?';
     final stmt = _db!.prepare(sql);
     final result = stmt.select([leafId]);
     if (result.isNotEmpty) {
-      final tree = Tree.getTreeById(result.first['TreeID'] as int);
-      final valueType = result.first['ValueType'] as String;
-      final value = result.first[valueType + 'Value'];
-      return Leaf(tree: tree!, valueType: valueType, value: value);
+      final ftree = Tree.getTreeById(result.first['TreeID'] as int);
+      final fvalueType = result.first['ValueType'] as String;
+      dynamic fvalue;
+      switch (fvalueType) {
+        case 'int':
+          fvalue = result.first['IntValue'] as int;
+          break;
+        case 'float':
+          fvalue = result.first['FloatValue'] as double;
+          break;
+        case 'string':
+          fvalue = result.first['StringValue'] as String;
+          break;
+        case 'mushroom':
+          fvalue = result.first['MushroomValue'] as int;
+          break;
+        case 'spell':
+          fvalue = result.first['SpellValue'] as String;
+          break;
+        case 'binary':
+          fvalue = result.first['BinaryValue'] as List<int>;
+          break;
+      }
+      stmt.dispose();
+      return Leaf(tree: ftree!, valueType: fvalueType, value: fvalue, id: leafId);
     } else {
       throw Exception('Leaf not found');
     }

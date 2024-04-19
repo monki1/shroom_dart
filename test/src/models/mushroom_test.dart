@@ -51,9 +51,23 @@ void main() {
       leafStmt.dispose();
     });
 
+    //test init mushroom from id
+    test('Mushroom Initialization from ID', () {
+      final leaf = Leaf(tree: testTree, valueType: 'string', value: 'Green');
+      mushroom.addLeaf(leaf);
+      final mushroom2 = Mushroom(id: mushroom.id);
+      expect(mushroom2.id, mushroom.id);
+      //check if leaves are loaded
+      expect(mushroom2.leaves.isNotEmpty, true);
+      expect(mushroom2.leaves.first.tree.name, testTree.name);
+      expect(mushroom2.leaves.first.valueType, 'string');
+      expect(mushroom2.leaves.first.value, 'Green');
+    });
+
 
 
     test('Mushroom Deletion', () async {
+      final leaf = Leaf(tree: testTree, valueType: 'string', value: 'Green');
       expectLater(mushroom.delete(), completes);
       final db = dbManager.getDatabase();
       final mushroomSql = 'SELECT * FROM Mushrooms WHERE MushroomID = ?';
@@ -64,6 +78,16 @@ void main() {
       final myceliumStmt = db.prepare(myceliumSql);
       final myceliumResult = myceliumStmt.select([mushroom.id]);
       expect(myceliumResult.isEmpty, true);
+//verify leaf result deletion
+      final leafSql = 'SELECT * FROM Leaves WHERE LeafID = ?';
+      final leafStmt = db.prepare(leafSql);
+      final leafResult = leafStmt.select([leaf.id]);
+      expect(leafResult.isEmpty, true);
+
+
+
+
+
       mushroomStmt.dispose();
     });
 

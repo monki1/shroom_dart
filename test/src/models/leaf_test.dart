@@ -23,6 +23,16 @@ void main() {
       // Mushroom.setDB(dbManager.getDatabase());
     });
 
+    test('get leaf by id', () {
+      final tree = Tree('Maple');
+      final leaf = Leaf(tree: tree, valueType: 'string', value: 'Green');
+      final leaf2 = Leaf.getLeafById(leaf.id!);
+      expect(leaf2.id, leaf.id);
+      expect(leaf2.tree.name, leaf.tree.name);
+      expect(leaf2.valueType, leaf.valueType);
+      expect(leaf2.value, leaf.value);
+    });
+
     test('Leaf Initialization - String', () {
       // Test the initialization of the Leaf object
       final tree = Tree('Maple');
@@ -31,6 +41,7 @@ void main() {
       expect(leaf.valueType, 'string');
       expect(leaf.value, 'Green');
     });
+
 
     test('Leaf Initialization - Int', () {
       // Test the initialization of the Leaf object
