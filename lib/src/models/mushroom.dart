@@ -120,9 +120,9 @@ void _checkAndCreateId() {
 
 
 Future<void> delete() async {
-  print('DELETE: Deleting mushroom');
+
   for (var leaf in _leaves) {
-    print('DELETE: Removing leaf from mushroom'+leaf.tree.name);
+
     await _removeMycelium(leaf);  // Assuming this could be changed to async
      leaf.delete();
   }

@@ -183,7 +183,6 @@ void main() {
       final checkSql = 'SELECT ValueType, StringValue FROM Leaves WHERE LeafID = ?';
       final checkStmt = db.prepare(checkSql);
       final checkResult = checkStmt.select([leaf.id]);
-      print(checkResult.toString());
       expect(checkResult.isEmpty, true);
       checkStmt.dispose();
     });
