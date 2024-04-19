@@ -44,7 +44,6 @@ void main() {
       await expectLater(mushroom.removeLeaf(leaf.tree.name), completes);
       //check if leaf and mycelium are removed from db
       final leafResult2 = leafStmt.select([leaf.id]);
-      print (leafResult2);
       expect(leafResult2.isEmpty, true);
       final myceliumResult2 = myceliumStmt.select([leaf.id]);
       expect(myceliumResult2.isEmpty, true);
@@ -68,7 +67,8 @@ void main() {
 
     test('Mushroom Deletion', () async {
       final leaf = Leaf(tree: testTree, valueType: 'string', value: 'Green');
-      expectLater(mushroom.delete(), completes);
+      mushroom.addLeaf(leaf);
+      await expectLater(mushroom.delete(), completes);
       final db = dbManager.getDatabase();
       final mushroomSql = 'SELECT * FROM Mushrooms WHERE MushroomID = ?';
       final mushroomStmt = db.prepare(mushroomSql);
@@ -83,9 +83,6 @@ void main() {
       final leafStmt = db.prepare(leafSql);
       final leafResult = leafStmt.select([leaf.id]);
       expect(leafResult.isEmpty, true);
-
-
-
 
 
       mushroomStmt.dispose();
