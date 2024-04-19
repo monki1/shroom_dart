@@ -3,7 +3,8 @@ import '../../../lib/src/sql/db.dart';
 import 'dart:io';
 
 const String schemaFilePath = 'lib/src/sql/schema.sql';
-final String databaseFilePath = 'test_database' + DateTime.now().toString() + '.db';
+final String databaseFilePath =
+    'test_database' + DateTime.now().toString() + '.db';
 
 void main() {
   group('DatabaseManager Tests', () {
@@ -37,11 +38,10 @@ void main() {
       dbManager.getDatabase();
       dbManager.removeDatabase();
       final dbFile = File(dbManager.databaseFilePath);
-      expect( await dbFile.exists(), false);
+      expect(await dbFile.exists(), false);
     });
 
     //test prune database
-
 
     tearDown(() {
       // Teardown code after each test

@@ -5,38 +5,38 @@ import 'package:sqlite3/sqlite3.dart';
 class DatabaseManager {
   final String schemaFilePath;
   final String databaseFilePath;
-  late String dbPath;
+
 
   DatabaseManager(
       {required this.schemaFilePath, required this.databaseFilePath}) {
-    dbPath = databaseFilePath;
+
   }
 
   Database getDatabase() {
-    final dbFile = File(dbPath);
+    final dbFile = File(databaseFilePath);
     if (!dbFile.existsSync()) {
       initDatabase();
     }
-    return sqlite3.open(dbPath);
+    return sqlite3.open(databaseFilePath);
   }
 
   void initDatabase() {
     final schema = _readSqlSchema(schemaFilePath);
     if (schema.isNotEmpty) {
-      final dbFile = File(dbPath);
+      final dbFile = File(databaseFilePath);
       if (!dbFile.existsSync()) {
-        _initializeDatabase(schema, dbPath);
+        _initializeDatabase(schema, databaseFilePath);
       } else {
         print('Database already exists. No action taken.');
       }
     }
   }
 
-  void _initializeDatabase(String schema, String dbPath) {
+  void _initializeDatabase(String schema, String databaseFilePath) {
     try {
-      final db = sqlite3.open(dbPath);
+      final db = sqlite3.open(databaseFilePath);
       db.execute(schema);
-      // print('Database initialized successfully. Database file: $dbPath');
+      // print('Database initialized successfully. Database file: $databaseFilePath');
       db.dispose();
     } catch (e) {
       print('Error initializing database: $e');
@@ -53,10 +53,10 @@ class DatabaseManager {
   }
 
   void removeDatabase() {
-    final file = File(dbPath);
+    final file = File(databaseFilePath);
     if (file.existsSync()) {
       file.delete();
-      // print('Database removed successfully. Database file: $dbPath');
+      // print('Database removed successfully. Database file: $databaseFilePath');
     } else {
       print('Database does not exist. No action taken.');
     }
