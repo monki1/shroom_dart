@@ -10,11 +10,9 @@ class Tree {
     _db = db;
   }
 
-  Tree(this.name){
+  Tree(this.name) {
     _save();
   }
-
-
 
   void _checkAndCreateId() {
     if (_db == null) {
@@ -38,18 +36,18 @@ class Tree {
     }
   }
 
-  void _save()  {
+  void _save() {
     _checkAndCreateId();
   }
 
-  void delete()  {
+  void delete() {
     // Check if the tree still has leaves
     final sql = 'SELECT COUNT(*) FROM Leaves WHERE TreeID = ?';
     final stmt = _db!.prepare(sql);
     final result = stmt.select([id]);
     if (result.isNotEmpty && result.first['COUNT(*)'] as int > 0) {
-    //   throw Exception('Tree still has leaves');
-     return;
+      //   throw Exception('Tree still has leaves');
+      return;
     }
 
     // Delete the tree

@@ -4,7 +4,8 @@ import '../../../lib/src/sql/db.dart';
 import 'dart:io';
 
 const String schemaFilePath = 'lib/src/sql/schema.sql';
-final String databaseFilePath = 'lib/src/test_database' + DateTime.now().toString() + '.db';
+final String databaseFilePath =
+    'lib/src/test_database' + DateTime.now().toString() + '.db';
 
 void main() {
   group('Tree Tests', () {
@@ -35,10 +36,9 @@ void main() {
       db.dispose();
     });
 
-    test('Tree Delete', ()  {
+    test('Tree Delete', () {
       // Test deleting a Tree object from the database.
       final tree = Tree('Maple');
-      
 
       tree.delete();
 
@@ -51,13 +51,13 @@ void main() {
       db.dispose();
     });
 
-    test('Tree Should NOT Delete With Leaves', ()  {
+    test('Tree Should NOT Delete With Leaves', () {
       // Test that a Tree object with leaves cannot be deleted.
       final tree = Tree('Birch');
-      
 
       // Add a leaf to the tree
-      final leafSql = 'INSERT INTO Leaves (TreeID, ValueType, StringValue) VALUES (?, ?, ?)';
+      final leafSql =
+          'INSERT INTO Leaves (TreeID, ValueType, StringValue) VALUES (?, ?, ?)';
       final leafStmt = dbManager.getDatabase().prepare(leafSql);
       leafStmt.execute([tree.id, 'string', 'LeafValue']);
       leafStmt.dispose();
@@ -83,7 +83,6 @@ void main() {
     test('Get Tree By ID', () {
       // Test retrieving a Tree object by ID.
       final tree = Tree('Willow');
-      
 
       final retrievedTree = Tree.getTreeById(tree.id!);
       expect(retrievedTree, isNotNull);

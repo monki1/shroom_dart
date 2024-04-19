@@ -12,33 +12,32 @@ class MacroShroom extends Mushroom {
 
   MacroShroom({int? id}) : super(id: id);
 
-  static Future<MacroShroom> fromMushroom(String name, Mushroom mushroom) async {
+  static Future<MacroShroom> fromMushroom(
+      String name, Mushroom mushroom) async {
     var macroShroom = MacroShroom(id: mushroom.id!);
     await macroShroom.setName(name);
     return macroShroom;
   }
 
+  Future<void> setName(String name) async {
+    this.name = name;
 
-Future<void> setName(String name) async {
-  this.name = name;
-
-  // Check if the name is already in the database
-  final sql = 'SELECT MushroomID FROM $tableName WHERE Name = ?';
-  final stmt = _db!.prepare(sql);
-  final result = stmt.select([name]);
-  if (result.isNotEmpty) {
-    if (result.first['MushroomID'] as int != id) {
-      throw Exception('Name already exists');
+    // Check if the name is already in the database
+    final sql = 'SELECT MushroomID FROM $tableName WHERE Name = ?';
+    final stmt = _db!.prepare(sql);
+    final result = stmt.select([name]);
+    if (result.isNotEmpty) {
+      if (result.first['MushroomID'] as int != id) {
+        throw Exception('Name already exists');
+      }
     }
+    //upsert the name where mushroomID = id
+    final upsertSql =
+        'INSERT OR REPLACE INTO $tableName (MushroomID, Name) VALUES (?, ?)';
+    final upsertStmt = _db!.prepare(upsertSql);
+    upsertStmt.execute([id, name]);
+    upsertStmt.dispose();
   }
-  //upsert the name where mushroomID = id
-  final upsertSql = 'INSERT OR REPLACE INTO $tableName (MushroomID, Name) VALUES (?, ?)';
-  final upsertStmt = _db!.prepare(upsertSql);
-  upsertStmt.execute([id, name]);
-  upsertStmt.dispose();
-}
-
-
 
   void deleteName() {
     final deleteSql = 'DELETE FROM $tableName WHERE MushroomID = ?';
@@ -51,7 +50,5 @@ Future<void> setName(String name) async {
   Future<void> delete() async {
     deleteName();
     super.delete();
-    
   }
-
 }

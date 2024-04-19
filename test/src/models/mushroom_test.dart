@@ -14,7 +14,8 @@ void main() {
     setUp(() {
       dbManager = DatabaseManager(
         schemaFilePath: 'lib/src/sql/schema.sql',
-        databaseFilePath: 'lib/src/test_database' + DateTime.now().toString() + '.db',
+        databaseFilePath:
+            'lib/src/test_database' + DateTime.now().toString() + '.db',
       );
       dbManager.initDatabase();
       Tree.setDB(dbManager.getDatabase());
@@ -63,8 +64,6 @@ void main() {
       expect(mushroom2.leaves.first.value, 'Green');
     });
 
-
-
     test('Mushroom Deletion', () async {
       final leaf = Leaf(tree: testTree, valueType: 'string', value: 'Green');
       mushroom.addLeaf(leaf);
@@ -83,7 +82,6 @@ void main() {
       final leafStmt = db.prepare(leafSql);
       final leafResult = leafStmt.select([leaf.id]);
       expect(leafResult.isEmpty, true);
-
 
       mushroomStmt.dispose();
     });

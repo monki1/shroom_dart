@@ -7,7 +7,8 @@ class DatabaseManager {
   final String databaseFilePath;
   late String dbPath;
 
-  DatabaseManager({required this.schemaFilePath, required this.databaseFilePath}) {
+  DatabaseManager(
+      {required this.schemaFilePath, required this.databaseFilePath}) {
     dbPath = databaseFilePath;
   }
 
@@ -60,6 +61,4 @@ class DatabaseManager {
       print('Database does not exist. No action taken.');
     }
   }
-
-
 }

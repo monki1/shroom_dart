@@ -2,19 +2,17 @@ import 'package:sqlite3/sqlite3.dart';
 import 'leaf.dart';
 import 'tree.dart';
 
-
 class Mushroom {
-  List<Leaf> _leaves=[];
+  List<Leaf> _leaves = [];
   List<Leaf> get leaves => _leaves;
   int? id;
   static String tableName = 'Mushrooms';
   static Database? _db;
 
-  Mushroom({int? id=null}) {
+  Mushroom({int? id = null}) {
     if (id != null) {
       this.id = id;
       _loadLeaves();
-
     } else {
       _checkAndCreateId();
     }
@@ -29,8 +27,6 @@ class Mushroom {
     final selectStmt = _db!.prepare(selectSql);
     final results = selectStmt.select([id]);
 
-    
-
     for (var result in results) {
       final leafId = result['LeafID'] as int;
       final leaf = Leaf.getLeafById(leafId);
@@ -38,9 +34,6 @@ class Mushroom {
     }
     selectStmt.dispose();
   }
-
-
-  
 
   Future<void> _addMycelium(Leaf leaf) async {
     // add mycelium to the database
@@ -50,9 +43,11 @@ class Mushroom {
     insertStmt.execute([id, leaf.id]);
     // print('Mycelium added');
   }
+
   Future<void> _removeMycelium(Leaf leaf) async {
     // remove mycelium from the database
-    final deleteSql = 'DELETE FROM Mycelium WHERE MushroomID = ? AND LeafID = ?';
+    final deleteSql =
+        'DELETE FROM Mycelium WHERE MushroomID = ? AND LeafID = ?';
     final deleteStmt = _db!.prepare(deleteSql);
     deleteStmt.execute([id, leaf.id]);
   }
@@ -83,53 +78,45 @@ class Mushroom {
     await _addMycelium(leaf);
   }
 
-
-  //IMPLEMENT : function removeLeaf(TreeName String): 
+  //IMPLEMENT : function removeLeaf(TreeName String):
   Future<void> removeLeaf(String treeName) async {
-  // Attempt to find a leaf associated with the given tree name
-  //if no leaf of that tree name is found, throw an exception
-  Leaf? targetLeaf = _leaves.firstWhere(
-    (leaf) => leaf.tree.name == treeName,
-  );
+    // Attempt to find a leaf associated with the given tree name
+    //if no leaf of that tree name is found, throw an exception
+    Leaf? targetLeaf = _leaves.firstWhere(
+      (leaf) => leaf.tree.name == treeName,
+    );
 
-  if (targetLeaf != null) {
-    await _removeMycelium(targetLeaf);
-    _leaves.remove(targetLeaf);
-    targetLeaf.delete();
-  } else {
-    throw Exception('Leaf with tree name "$treeName" not found');
-  }
-}
-
-
-void _checkAndCreateId() {
-  if (_db == null) {
-    throw Exception('Database not set.');
+    if (targetLeaf != null) {
+      await _removeMycelium(targetLeaf);
+      _leaves.remove(targetLeaf);
+      targetLeaf.delete();
+    } else {
+      throw Exception('Leaf with tree name "$treeName" not found');
+    }
   }
 
-  if (id == null) {
-    final insertSql = 'INSERT INTO $tableName DEFAULT VALUES';
-    final insertStmt = _db!.prepare(insertSql);
-    insertStmt.execute();
-    id = _db!.lastInsertRowId;
-    insertStmt.dispose();
+  void _checkAndCreateId() {
+    if (_db == null) {
+      throw Exception('Database not set.');
+    }
+
+    if (id == null) {
+      final insertSql = 'INSERT INTO $tableName DEFAULT VALUES';
+      final insertStmt = _db!.prepare(insertSql);
+      insertStmt.execute();
+      id = _db!.lastInsertRowId;
+      insertStmt.dispose();
+    }
   }
-}
 
-
-
-
-Future<void> delete() async {
-
-  for (var leaf in _leaves) {
-
-    await _removeMycelium(leaf);  // Assuming this could be changed to async
-     leaf.delete();
+  Future<void> delete() async {
+    for (var leaf in _leaves) {
+      await _removeMycelium(leaf); // Assuming this could be changed to async
+      leaf.delete();
+    }
+    final deleteSql = 'DELETE FROM $tableName WHERE MushroomID = ?';
+    final deleteStmt = _db!.prepare(deleteSql);
+    deleteStmt.execute([id]);
+    deleteStmt.dispose();
   }
-  final deleteSql = 'DELETE FROM $tableName WHERE MushroomID = ?';
-  final deleteStmt = _db!.prepare(deleteSql);
-  deleteStmt.execute([id]);
-  deleteStmt.dispose();
-}
-
 }

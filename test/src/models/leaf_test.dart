@@ -5,7 +5,8 @@ import '../../../lib/src/sql/db.dart';
 import 'dart:io';
 
 const String schemaFilePath = 'lib/src/sql/schema.sql';
-final String databaseFilePath = 'lib/src/test_database' + DateTime.now().toString() + '.db';
+final String databaseFilePath =
+    'lib/src/test_database' + DateTime.now().toString() + '.db';
 
 void main() {
   group('Leaf Tests', () {
@@ -42,21 +43,19 @@ void main() {
       expect(leaf.value, 'Green');
     });
 
-
     test('Leaf Initialization - Int', () {
       // Test the initialization of the Leaf object
       final tree = Tree('Maple');
-      final leaf = Leaf(tree: tree, valueType: 'int', value:42);
+      final leaf = Leaf(tree: tree, valueType: 'int', value: 42);
       expect(leaf.tree.name, 'Maple');
       expect(leaf.valueType, 'int');
       expect(leaf.value, 42);
     });
 
     test('Leaf Initialization - Float', () {
-
       // Test the initialization of the Leaf object
       final tree = Tree('Maple');
-      final leaf = Leaf(tree: tree, valueType: 'float', value:42.555);
+      final leaf = Leaf(tree: tree, valueType: 'float', value: 42.555);
       expect(leaf.tree.name, 'Maple');
       expect(leaf.valueType, 'float');
       expect(leaf.value, 42.555);
@@ -66,7 +65,6 @@ void main() {
       // Setup a tree for the leaf
       final tree = Tree('Cedar');
 
-
       // Create a binary data array
       List<int> binaryData = [0, 255, 127, 128];
 
@@ -74,11 +72,11 @@ void main() {
       final leaf = Leaf(tree: tree, valueType: 'binary', value: binaryData);
 
       // Save the leaf to the database
-      
 
       // Fetch the leaf from the database to verify it was saved correctly
       final db = dbManager.getDatabase();
-      final sql = 'SELECT TreeID, ValueType, BinaryValue FROM Leaves WHERE LeafID = ?';
+      final sql =
+          'SELECT TreeID, ValueType, BinaryValue FROM Leaves WHERE LeafID = ?';
       final stmt = db.prepare(sql);
       final result = stmt.select([leaf.id]);
 
@@ -89,65 +87,61 @@ void main() {
       expect(result.first['BinaryValue'], binaryData);
     });
 
-  test('Leaf Initialization - Spell', () {
-    // Setup a tree for the leaf
-    final tree = Tree('Birch');
+    test('Leaf Initialization - Spell', () {
+      // Setup a tree for the leaf
+      final tree = Tree('Birch');
 
+      // Initialize the leaf with a spell type
+      final spellDescription = 'Invisibility';
+      final leaf =
+          Leaf(tree: tree, valueType: 'spell', value: spellDescription);
 
-    // Initialize the leaf with a spell type
-    final spellDescription = 'Invisibility';
-    final leaf = Leaf(tree: tree, valueType: 'spell', value: spellDescription);
+      // Fetch the leaf from the database to verify it was saved correctly
+      final db = dbManager.getDatabase();
+      final sql =
+          'SELECT TreeID, ValueType, SpellValue FROM Leaves WHERE LeafID = ?';
+      final stmt = db.prepare(sql);
+      final result = stmt.select([leaf.id]);
 
+      // Check that the database entry matches the input
+      expect(result.isNotEmpty, true);
+      expect(result.first['TreeID'], tree.id);
+      expect(result.first['ValueType'], 'spell');
+      expect(result.first['SpellValue'], spellDescription);
 
+      // Clean up
+      stmt.dispose();
+      db.dispose();
+    });
 
-    // Fetch the leaf from the database to verify it was saved correctly
-    final db = dbManager.getDatabase();
-    final sql = 'SELECT TreeID, ValueType, SpellValue FROM Leaves WHERE LeafID = ?';
-    final stmt = db.prepare(sql);
-    final result = stmt.select([leaf.id]);
+    test('Leaf Initialization - Mushroom', () {
+      // Setup a tree for the leaf
+      final tree = Tree('Elm');
 
-    // Check that the database entry matches the input
-    expect(result.isNotEmpty, true);
-    expect(result.first['TreeID'], tree.id);
-    expect(result.first['ValueType'], 'spell');
-    expect(result.first['SpellValue'], spellDescription);
+      // Example Mushroom ID
+      final exampleMushroomId = 1;
 
-    // Clean up
-    stmt.dispose();
-    db.dispose();
-  });
+      // Initialize the leaf with a mushroom type
+      final leaf =
+          Leaf(tree: tree, valueType: 'mushroom', value: exampleMushroomId);
 
-  test('Leaf Initialization - Mushroom', () {
-    // Setup a tree for the leaf
-    final tree = Tree('Elm');
+      // Fetch the leaf from the database to verify it was saved correctly
+      final db = dbManager.getDatabase();
+      final sql =
+          'SELECT TreeID, ValueType, MushroomValue FROM Leaves WHERE LeafID = ?';
+      final stmt = db.prepare(sql);
+      final result = stmt.select([leaf.id]);
 
+      // Check that the database entry matches the input
+      expect(result.isNotEmpty, true);
+      expect(result.first['TreeID'], tree.id);
+      expect(result.first['ValueType'], 'mushroom');
+      expect(result.first['MushroomValue'], exampleMushroomId);
 
-    // Example Mushroom ID
-    final exampleMushroomId = 1;
-
-    // Initialize the leaf with a mushroom type
-    final leaf = Leaf(tree: tree, valueType: 'mushroom', value: exampleMushroomId);
-
-
-
-    // Fetch the leaf from the database to verify it was saved correctly
-    final db = dbManager.getDatabase();
-    final sql = 'SELECT TreeID, ValueType, MushroomValue FROM Leaves WHERE LeafID = ?';
-    final stmt = db.prepare(sql);
-    final result = stmt.select([leaf.id]);
-
-    // Check that the database entry matches the input
-    expect(result.isNotEmpty, true);
-    expect(result.first['TreeID'], tree.id);
-    expect(result.first['ValueType'], 'mushroom');
-    expect(result.first['MushroomValue'], exampleMushroomId);
-
-    // Clean up
-    stmt.dispose();
-    db.dispose();
-  });
-
-
+      // Clean up
+      stmt.dispose();
+      db.dispose();
+    });
 
     //TESTED IN INITIALIZATION
     // test('Leaf Save', () {
@@ -155,7 +149,7 @@ void main() {
     //   final tree = Tree('Birch');
     // //   tree.save();
     //   final leaf = Leaf(tree: tree, valueType: 'int', value: 42);
-    //   
+    //
 
     //   final db = dbManager.getDatabase();
     //   final sql = 'SELECT TreeID, ValueType, IntValue FROM Leaves WHERE LeafID = ?';
@@ -173,14 +167,14 @@ void main() {
       // Test that a Leaf object without an associated mushroom can be deleted
       final tree = Tree('Willow');
       final leaf = Leaf(tree: tree, valueType: 'string', value: 'Yellow');
-      
 
       // Attempt to delete the leaf
       leaf.delete();
 
       // Check if the leaf has been deleted
       final db = dbManager.getDatabase();
-      final checkSql = 'SELECT ValueType, StringValue FROM Leaves WHERE LeafID = ?';
+      final checkSql =
+          'SELECT ValueType, StringValue FROM Leaves WHERE LeafID = ?';
       final checkStmt = db.prepare(checkSql);
       final checkResult = checkStmt.select([leaf.id]);
       expect(checkResult.isEmpty, true);
