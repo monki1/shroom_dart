@@ -29,18 +29,19 @@ class ShroomBase {
   ShroomBase(this.mushroom);
 //IMPLEMENT THESE
   //create macroshroom from name
-static Future<ShroomBase> createShroomMacro(String name) async {
-
-   Mushroom aMushroom = (await MacroShroom.fromMushroom(name, Mushroom())) as Mushroom;
+  static Future<ShroomBase> createShroomMacro(String name) async {
+    Mushroom aMushroom =
+        (await MacroShroom.fromMushroom(name, Mushroom())) as Mushroom;
     return ShroomBase(aMushroom);
-}
-static ShroomBase createShroom() {
+  }
 
+  static ShroomBase createShroom() {
     Mushroom aMushroom = Mushroom();
     return ShroomBase(aMushroom);
   }
+
   //get mushroom by id
-static Future <ShroomBase> getShroomById(int id) async {
+  static Future<ShroomBase> getShroomById(int id) async {
     Mushroom aMushroom = Mushroom(id: id);
     //check if mushroom is macroshroom
     final db = dbManager.getDatabase();
@@ -48,11 +49,12 @@ static Future <ShroomBase> getShroomById(int id) async {
     final stmt = db.prepare(sql);
     final result = stmt.select([id]);
     if (result.isNotEmpty) {
-        return ShroomBase(await MacroShroom.fromMushroom(result.first['Name'], aMushroom));
-    }else{
-        return ShroomBase(aMushroom);
+      return ShroomBase(
+          await MacroShroom.fromMushroom(result.first['Name'], aMushroom));
+    } else {
+      return ShroomBase(aMushroom);
     }
-}
+  }
 
   //get macroshroom by name
 
@@ -63,20 +65,12 @@ static Future <ShroomBase> getShroomById(int id) async {
     final stmt = db.prepare(sql);
     final result = stmt.select([name]);
     if (result.isNotEmpty) {
-        return ShroomBase(await MacroShroom.fromMushroom(name, Mushroom(id: result.first['MushroomID'])));
+      return ShroomBase(await MacroShroom.fromMushroom(
+          name, Mushroom(id: result.first['MushroomID'])));
+    }
   }
 
- 
-
-
-
-
-
-
-}
-
-
- static removeDatabase() {
+  static removeDatabase() {
     dbManager.removeDatabase();
   }
 }

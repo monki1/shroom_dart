@@ -37,7 +37,7 @@ void main() {
 
     //     //check if name is in macroshroomNames table with correct mushroomID
     test('MacroShroom Initialization', () async {
-      Future.delayed(Duration(seconds: 1));
+      //   Future.delayed(Duration(seconds: 1));
       final db = dbManager.getDatabase();
 
       // Print all the rows in the MacroShroomNames table
