@@ -18,7 +18,7 @@ class Leaf {
     }
     if (id != null) {
       this.id = id;
-      
+
     }else{
       _save();
     }
@@ -129,8 +129,6 @@ class Leaf {
             deleteStmt.dispose();
             Tree treeObj = Tree.getTreeById(this.tree.id!)!;
             treeObj.delete();
-
-            print('Leaf deleted '+id.toString());
     return;
   }
 }

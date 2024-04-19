@@ -25,12 +25,10 @@ class Mushroom {
   }
 
   void _loadLeaves() {
-    print('Loading leaves');
     final selectSql = 'SELECT LeafID FROM Mycelium WHERE MushroomID = ?';
     final selectStmt = _db!.prepare(selectSql);
     final results = selectStmt.select([id]);
 
-    print(results );
     
 
     for (var result in results) {
@@ -122,7 +120,9 @@ void _checkAndCreateId() {
 
 
 Future<void> delete() async {
+  print('DELETE: Deleting mushroom');
   for (var leaf in _leaves) {
+    print('DELETE: Removing leaf from mushroom'+leaf.tree.name);
     await _removeMycelium(leaf);  // Assuming this could be changed to async
      leaf.delete();
   }
