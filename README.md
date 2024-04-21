@@ -11,19 +11,41 @@ Here's an example of how to use the Shroom class:
 ```dart
 import 'package:shroom/shroom.dart';
 
-void main() {
+void main() async {
   // Initialize the Shroom database
   Shroom.init('path/to/database.db');
 
   // Create a new Shroom object with a name
-  var shroom = await Shroom.create(name: 'test');
+  Shroom shroom = await Shroom.create(name: 'test');
 
   // Set some data on the Shroom
-  var data = ShroomData('string', 'value');
+  ShroomData data = ShroomData('string', 'value');
+  // var dataInt = ShroomData('int', 42);
+  // var dataFloat = ShroomData('float', 3.14);
+  // var dataBinary = ShroomData('binary', [0, 1, 2, 3]); 
   await shroom.set('key', data);
 
   // Retrieve the data from the Shroom
-  var retrievedData = shroom.data['key'];
+  ShroomData retrievedData = shroom.data['key'];
+
+  // Retrieve a Shroom by ID
+  Shroom shroomById = await Shroom.fromID(1);
+  if (shroomById != null) {
+    print('Shroom by ID: ${shroomById.name}');
+  }
+
+  // Retrieve a Shroom by name
+  Shroom shroomByName = await Shroom.fromName('test');
+  if (shroomByName != null) {
+    print('Shroom by name: ${shroomByName.name}');
+  }
+
+  // Remove the data from the Shroom
+  await shroom.remove('key');
+
+  // Modify the name of the Shroom
+  shroom.name = 'new name';
+  shroom.name = null;
 
   // Delete the Shroom
   await shroom.delete();
@@ -53,7 +75,9 @@ Here's the updated summary with the return types at the beginning, similar to a 
 The `ShroomData` class is used to store data in a Shroom object. It has two properties: `type` and `value`. The `type` specifies the data type, such as "int", "float", "string", etc. The `value` holds the actual data value.
 
 ## Supported Data Types
-check `src/shroom_data` and  `lib/src/sql/schema.sql`
+check [ShroomData Dart File](lib/src/shroom_data.dart)
+ and [Schema SQL File](lib/src/sql/schema.sql)
+
 ```dart
 class ShroomData {
   static Map<String, List<dynamic>> typeDetails = {
