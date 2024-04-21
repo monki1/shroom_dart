@@ -75,7 +75,7 @@ Here's the updated summary with the return types at the beginning, similar to a 
 The `ShroomData` class is used to store data in a Shroom object. It has two properties: `type` and `value`. The `type` specifies the data type, such as "int", "float", "string", etc. The `value` holds the actual data value.
 
 ## Supported Data Types
-check [ShroomData Dart File](lib/src/shroom_data.dart)
+check [ShroomData Dart File](lib/shroom_data.dart)
  and [Schema SQL File](lib/src/sql/schema.sql)
 
 ```dart
