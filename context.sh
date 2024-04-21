@@ -1,15 +1,19 @@
-# Remove context.txt if it exists
-[ -f context.txt ] && rm context.txt
+# Remove codebase.md if it exists
+[ -f codebase.md ] && rm codebase.md
 
-# Initialize context.txt with a header
-echo "Files and Content:" > context.txt
+# Initialize codebase.md with a header
+echo "Files and Content:" > codebase.md
 
-# Append all file paths excluding specified files and directories to context.txt
-find . -type d \( -path './bin' -o -path './.dart_tool' -o -path './.git' \) -prune -o -type f ! \( -name '.gitignore' -o -name 'context.txt' -o -name 'pubspec.lock' -o -name 'context.sh' -o -name 'analysis_options.yaml' \) -print | tee -a context.txt | while read -r file; do
-    echo "Content for $file:" >> context.txt
-    cat "$file" >> context.txt
-    echo "" >> context.txt
+# Append all file paths excluding specified files and directories to codebase.md
+find . -type d \( -path './bin' -o -path './.dart_tool' -o -path './.git' \) -prune -o -type f ! \( -name '.gitignore' -o -name 'codebase.md' -o -name 'pubspec.lock' -o -name 'context.sh' -o -name 'analysis_options.yaml' \) -print | tee -a codebase.md | while read -r file; do
+    echo "Content for $file:" >> codebase.md
+    # Extract the file extension to use as the markdown code block label
+    extension="${file##*.}"
+    echo "\`\`\`$extension" >> codebase.md
+    cat "$file" >> codebase.md
+    echo "\`\`\`" >> codebase.md
+    echo "" >> codebase.md
 done
 
-# Copy the contents of context.txt to the clipboard
-pbcopy < context.txt
+# Copy the contents of codebase.md to the clipboard
+pbcopy < codebase.md

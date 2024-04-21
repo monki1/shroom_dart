@@ -1,17 +1,6 @@
-const Map<String, List<dynamic>> typeDetails = {
-  'int': ['IntValue', int],
-  'float': ['FloatValue', double],
-  'string': ['StringValue', String],
-  'mushroom': [
-    'MushroomValue',
-    int
-  ], // Assuming mushroom values are stored as int
-  'spell': ['SpellValue', String], // Assuming spell values are stored as String
-  'binary': [
-    'BinaryValue',
-    List<int>
-  ] // Assuming binary values are stored as List<int>
-};
+import '../shroom_data.dart';
+
+final Map<String, List<dynamic>> typeDetails = ShroomData.typeDetails;
 
 class ValueTypeHandler {
   static final List<String> _validTypes = typeDetails.keys.toList();

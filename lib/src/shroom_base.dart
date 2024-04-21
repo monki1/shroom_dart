@@ -6,9 +6,6 @@ import 'sql/db.dart';
 
 const String schemaFilePath = 'lib/src/sql/schema.sql';
 
-
-
-
 class ShroomBase {
 //A WRAPPER CLASS FOR MUSHROOM, MACROSHROOM
   static late DatabaseManager dbManager;
@@ -81,15 +78,39 @@ class ShroomBase {
     await mushroom.addLeaf(leaf);
   }
 
-  Future<void> remove (String name) async {
+  Future<void> remove(String name) async {
     await mushroom.removeLeaf(name);
   }
 
-  
+  int get id {
+    return mushroom.id!;
+  }
 
+  String? get name {
+    if (mushroom is MacroShroom) {
+      return (mushroom as MacroShroom).name;
+    }
+    return null;
+  }
 
+  set name(String? name) {
+    if (name == null) {
+      if (mushroom is MacroShroom) {
+        int lastId = this.id;
 
-
-
-
+        (mushroom as MacroShroom).deleteName();
+        mushroom = Mushroom(id: lastId);
+      }
+      return;
+    }
+    if (mushroom is MacroShroom) {
+      (mushroom as MacroShroom).setName(name);
+      return;
+    }
+    if (mushroom is Mushroom) {
+      MacroShroom.fromMushroom(name, mushroom).then((value) {
+        mushroom = value;
+      });
+    }
+  }
 }
