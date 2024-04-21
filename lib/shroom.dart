@@ -16,17 +16,17 @@ class Shroom {
   Shroom();
 
   static Future<Shroom> create({String? name}) async {
-    // try {
-    Shroom sb1 = Shroom();
-    if (name != null) {
-      sb1.shroomBase = await ShroomBase.createShroomMacro(name);
-    } else {
-      sb1.shroomBase = ShroomBase.createShroom();
+    try {
+      Shroom sb1 = Shroom();
+      if (name != null) {
+        sb1.shroomBase = await ShroomBase.createShroomMacro(name);
+      } else {
+        sb1.shroomBase = ShroomBase.createShroom();
+      }
+      return sb1;
+    } catch (e) {
+      throw e;
     }
-    return sb1;
-    // } catch (e) {
-    //   return null;
-    // }
   }
 
   static Future<Shroom?> fromID(int id) async {
