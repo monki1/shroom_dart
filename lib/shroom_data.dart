@@ -1,24 +1,40 @@
 class ShroomData {
   static Map<String, List<dynamic>> typeDetails = {
-    'int': ['IntValue', int],
-    'float': ['FloatValue', double],
-    'string': ['StringValue', String],
+    'int': [
+      //type String
+      'IntValue', //sql column name
+      int, //dart type
+    ],
+    'float': [
+      'FloatValue',
+      double,
+    ],
+    'string': [
+      'StringValue',
+      String,
+    ],
     'mushroom': [
       'MushroomValue',
-      int
+      int,
     ], // Assuming mushroom values are stored as int
     'spell': [
       'SpellValue',
-      String
+      String,
     ], // Assuming spell values are stored as String
     'binary': [
       'BinaryValue',
-      List<int>
+      List<int>,
     ] // Assuming binary values are stored as List<int>
   };
 
   String type;
   dynamic value;
 
-  ShroomData(this.type, this.value);
+  ShroomData(this.type, this.value) {
+    // Check type is in typeDetails
+    if (!typeDetails.containsKey(type)) {
+      throw ArgumentError('Invalid value type');
+    }
+    // Check value is of the correct type
+  }
 }
