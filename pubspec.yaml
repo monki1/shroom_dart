@@ -1,5 +1,5 @@
 name: shroom
-description: A sample command-line application.
+description: Database, a shroom is a node that stores data.Edges can be stored as data in Nodes.
 version: 1.0.0
 repository: https://github.com/monki1/shroom_dart
 
