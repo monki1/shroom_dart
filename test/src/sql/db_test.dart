@@ -1,10 +1,9 @@
 import 'package:test/test.dart';
-import '../../../lib/src/sql/db.dart';
+import 'package:shroom/src/sql/db.dart';
 import 'dart:io';
 
 const String schemaFilePath = 'lib/src/sql/schema.sql';
-final String databaseFilePath =
-    'test_database' + DateTime.now().toString() + '.db';
+final String databaseFilePath = 'test_database${DateTime.now().toString()}.db';
 
 void main() {
   group('DatabaseManager Tests', () {

@@ -1,21 +1,18 @@
 import 'package:test/test.dart';
-import '../../lib/src/shroom_base.dart';
-import '../../lib/src/models/mushroom.dart';
-import '../../lib/src/models/macroshroom.dart';
-import '../../lib/src/sql/db.dart';
+import 'package:shroom/src/shroom_base.dart';
+import 'package:shroom/src/models/macroshroom.dart';
 
 void main() {
   group('ShroomBase Tests', () {
     late ShroomBase shroomBase1;
 
     setUp(() {
-      ShroomBase.init("test_database" + DateTime.now().toString() + ".db");
+      ShroomBase.init("test_database${DateTime.now().toString()}.db");
     });
 
     test('createShroom', () {
       shroomBase1 = ShroomBase.createShroom();
-      expect(shroomBase1.mushroom is Mushroom, true);
-      expect(!(shroomBase1.mushroom is MacroShroom), true);
+      expect((shroomBase1.mushroom is! MacroShroom), true);
     });
 
     test('create shroom macro', () async {

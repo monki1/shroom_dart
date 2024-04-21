@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:path/path.dart' as path;
 import 'package:sqlite3/sqlite3.dart';
 
 class DatabaseManager {

@@ -1,6 +1,5 @@
 import 'package:sqlite3/sqlite3.dart';
 import 'leaf.dart';
-import 'tree.dart';
 
 class Mushroom {
   List<Leaf> _leaves = [];
@@ -90,17 +89,19 @@ class Mushroom {
   Future<void> removeLeaf(String treeName) async {
     // Attempt to find a leaf associated with the given tree name
     //if no leaf of that tree name is found, throw an exception
-    Leaf? targetLeaf = _leaves.firstWhere(
-      (leaf) => leaf.tree.name == treeName,
-    );
-
-    if (targetLeaf != null) {
-      await _removeMycelium(targetLeaf);
-      _leaves.remove(targetLeaf);
-      targetLeaf.delete();
-    } else {
-      throw Exception('Leaf with tree name "$treeName" not found');
+    Leaf? targetLeaf = null;
+    for (var leaf in _leaves) {
+      if (leaf.tree.name == treeName) {
+        targetLeaf = leaf;
+        break;
+      }
     }
+    if (targetLeaf == null) {
+      throw Exception('Leaf not found');
+    }
+    await _removeMycelium(targetLeaf);
+    _leaves.remove(targetLeaf);
+    targetLeaf.delete();
   }
 
   void _checkAndCreateId() {

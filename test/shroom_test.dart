@@ -1,7 +1,6 @@
 import 'package:shroom/shroom.dart';
 import 'package:shroom/src/models/macroshroom.dart';
-import 'package:shroom/src/models/mushroom.dart';
-import 'package:shroom/src/models/leaf.dart';
+
 import 'package:test/test.dart';
 import 'package:shroom/shroom_data.dart';
 
@@ -40,7 +39,7 @@ void main() {
 
     test('Shroom Get by Name', () async {
       // Test getting a Shroom object by its name.
-      final createdShroom = await Shroom.create(name: 'test');
+      await Shroom.create(name: 'test');
       final shroom = await Shroom.fromName('test');
       expect(shroom, isNotNull);
       expect(shroom!.shroomBase.mushroom is MacroShroom, true);

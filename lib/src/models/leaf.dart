@@ -93,7 +93,7 @@ class Leaf {
   void delete() {
     final deleteSql = 'DELETE FROM $tableName WHERE LeafID = ?';
     DatabaseHelper.executeInsertOrUpdate(_db!, deleteSql, [id]);
-    Tree treeObj = Tree.getTreeById(this.tree.id!)!;
+    Tree treeObj = Tree.getTreeById(tree.id!)!;
     treeObj.delete();
   }
 }

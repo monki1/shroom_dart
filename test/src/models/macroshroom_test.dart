@@ -1,10 +1,9 @@
 import 'package:test/test.dart';
-import '../../../lib/src/models/macroshroom.dart';
-import '../../../lib/src/models/mushroom.dart';
-import '../../../lib/src/models/leaf.dart';
-import '../../../lib/src/models/tree.dart';
-import '../../../lib/src/sql/db.dart';
-import 'dart:io';
+import 'package:shroom/src/models/macroshroom.dart';
+import 'package:shroom/src/models/mushroom.dart';
+import 'package:shroom/src/models/leaf.dart';
+import 'package:shroom/src/models/tree.dart';
+import 'package:shroom/src/sql/db.dart';
 
 const String schemaFilePath = 'lib/src/sql/schema.sql';
 final String databaseFilePath =

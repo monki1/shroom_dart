@@ -1,9 +1,8 @@
 import 'package:test/test.dart';
-import '../../../lib/src/models/mushroom.dart';
-import '../../../lib/src/models/leaf.dart';
-import '../../../lib/src/models/tree.dart';
-import '../../../lib/src/sql/db.dart';
-import 'dart:io';
+import 'package:shroom/src/models/mushroom.dart';
+import 'package:shroom/src/models/leaf.dart';
+import 'package:shroom/src/models/tree.dart';
+import 'package:shroom/src/sql/db.dart';
 
 void main() {
   group('Mushroom Tests', () {
@@ -14,8 +13,7 @@ void main() {
     setUp(() {
       dbManager = DatabaseManager(
         schemaFilePath: 'lib/src/sql/schema.sql',
-        databaseFilePath:
-            'lib/src/test_database' + DateTime.now().toString() + '.db',
+        databaseFilePath: 'test_database${DateTime.now().toString()}.db',
       );
       dbManager.initDatabase();
       Tree.setDB(dbManager.getDatabase());

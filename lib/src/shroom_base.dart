@@ -107,10 +107,9 @@ class ShroomBase {
       (mushroom as MacroShroom).setName(name);
       return;
     }
-    if (mushroom is Mushroom) {
-      MacroShroom.fromMushroom(name, mushroom).then((value) {
-        mushroom = value;
-      });
-    }
+
+    MacroShroom.fromMushroom(name, mushroom).then((value) {
+      mushroom = value;
+    });
   }
 }

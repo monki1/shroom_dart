@@ -16,8 +16,7 @@ class ShroomData {
     'binary': [
       'BinaryValue',
       List<int>,
-    ] 
-    ,
+    ],
     'mushroom': [
       'MushroomValue',
       int,

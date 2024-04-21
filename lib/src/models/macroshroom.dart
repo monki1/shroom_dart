@@ -1,6 +1,5 @@
 import 'package:sqlite3/sqlite3.dart';
 import 'mushroom.dart';
-import 'leaf.dart';
 
 class MacroShroom extends Mushroom {
   String? name;

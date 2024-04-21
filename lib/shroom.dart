@@ -15,7 +15,7 @@ class Shroom {
 
   Shroom();
 
-  static Future<Shroom> create({String? name = null}) async {
+  static Future<Shroom> create({String? name}) async {
     // try {
     Shroom sb1 = Shroom();
     if (name != null) {
