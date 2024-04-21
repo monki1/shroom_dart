@@ -11,6 +11,14 @@ class Mushroom {
 
   Mushroom({int? id = null}) {
     if (id != null) {
+      //if id does not exist, throw error
+      final selectSql =
+          'SELECT MushroomID FROM $tableName WHERE MushroomID = ?';
+      final selectStmt = _db!.prepare(selectSql);
+      final results = selectStmt.select([id]);
+      if (results.isEmpty) {
+        throw Exception('Mushroom with id $id not found');
+      }
       this.id = id;
       _loadLeaves();
     } else {

@@ -5,8 +5,6 @@ import 'models/tree.dart';
 import 'sql/db.dart';
 
 const String schemaFilePath = 'lib/src/sql/schema.sql';
-final String databaseFilePath =
-    'lib/src/test_database' + DateTime.now().toString() + '.db';
 
 class ShroomBase {
 //A WRAPPER CLASS FOR MUSHROOM, MACROSHROOM
@@ -17,7 +15,7 @@ class ShroomBase {
     //init db
     dbManager = DatabaseManager(
       schemaFilePath: schemaFilePath,
-      databaseFilePath: databaseFilePath,
+      databaseFilePath: path,
     );
     dbManager.initDatabase();
     Tree.setDB(dbManager.getDatabase());
@@ -68,9 +66,19 @@ class ShroomBase {
       return ShroomBase(await MacroShroom.fromMushroom(
           name, Mushroom(id: result.first['MushroomID'])));
     }
+    return null;
   }
 
   static removeDatabase() {
     dbManager.removeDatabase();
+  }
+
+  Future<void> upsert(String name, String type, dynamic value) async {
+    Leaf leaf = Leaf(tree: Tree(name), valueType: type, value: value);
+    await mushroom.addLeaf(leaf);
+  }
+
+  Future<void> remove(String name) async {
+    await mushroom.removeLeaf(name);
   }
 }

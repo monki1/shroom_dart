@@ -15,7 +15,12 @@ class MacroShroom extends Mushroom {
   static Future<MacroShroom> fromMushroom(
       String name, Mushroom mushroom) async {
     var macroShroom = MacroShroom(id: mushroom.id!);
-    await macroShroom.setName(name);
+    try {
+      await macroShroom.setName(name);
+    } catch (e) {
+      mushroom.delete();
+      throw Exception('Name already exists');
+    }
     return macroShroom;
   }
 
