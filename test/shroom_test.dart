@@ -46,6 +46,13 @@ void main() {
       expect(shroom.name, 'test');
     });
 
+    test('Shroom create Occupied name throws exeption', () async {
+      // Test getting a Shroom object by its name.
+      await Shroom.create(name: 'test');
+      expect(() async => await Shroom.create(name: 'test'),
+          throwsA(isA<Exception>()));
+    });
+
     test('Shroom Set Data', () async {
       // Test setting data on a Shroom object.
       final shroom = await Shroom.create(name: 'test');
