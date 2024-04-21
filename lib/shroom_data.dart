@@ -13,6 +13,11 @@ class ShroomData {
       'StringValue',
       String,
     ],
+    'binary': [
+      'BinaryValue',
+      List<int>,
+    ] 
+    ,
     'mushroom': [
       'MushroomValue',
       int,
@@ -21,10 +26,6 @@ class ShroomData {
       'SpellValue',
       String,
     ], // Assuming spell values are stored as String
-    'binary': [
-      'BinaryValue',
-      List<int>,
-    ] // Assuming binary values are stored as List<int>
   };
 
   String type;

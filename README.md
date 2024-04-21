@@ -57,10 +57,23 @@ check `src/shroom_data` and  `lib/src/sql/schema.sql`
 ```dart
 class ShroomData {
   static Map<String, List<dynamic>> typeDetails = {
-    'int': [ //type String
-      'IntValue',//sql column name
-      int,//dart type
+    'int': [
+      //type String
+      'IntValue', //sql column name
+      int, //dart type
     ],
+    'float': [
+      'FloatValue',
+      double,
+    ],
+    'string': [
+      'StringValue',
+      String,
+    ],
+    'binary': [
+      'BinaryValue',
+      List<int>,
+    ]
     //.......
   }
 }
