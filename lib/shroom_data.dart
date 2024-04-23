@@ -20,7 +20,7 @@ class ShroomData {
     'mushroom': [
       'MushroomValue',
       int,
-    ], // Assuming mushroom values are stored as int
+    ], // is another shroom's id
     'spell': [
       'SpellValue',
       String,
