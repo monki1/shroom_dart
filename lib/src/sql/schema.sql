@@ -23,6 +23,8 @@ CREATE TABLE Leaves (
     MushroomValue INTEGER,
     SpellValue TEXT,
     BinaryValue BLOB,
+    --  add DateTimeValue with TimeStamp,
+    timeValue TIMESTAMP,
     FOREIGN KEY (TreeID) REFERENCES Trees(TreeID),
     FOREIGN KEY (MushroomValue) REFERENCES Mushrooms(MushroomID)
 );
