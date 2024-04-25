@@ -85,27 +85,27 @@ void main() {
       expect(result.first['BinaryValue'], binaryData);
     });
 
-    test('Leaf Initialization - Spell', () {
+    test('Leaf Initialization - String', () {
       // Setup a tree for the leaf
       final tree = Tree('Birch');
 
-      // Initialize the leaf with a spell type
-      final spellDescription = 'Invisibility';
+      // Initialize the leaf with a string type
+      final stringDescription = 'Invisibility';
       final leaf =
-          Leaf(tree: tree, valueType: 'spell', value: spellDescription);
+          Leaf(tree: tree, valueType: 'string', value: stringDescription);
 
       // Fetch the leaf from the database to verify it was saved correctly
       final db = dbManager.getDatabase();
       final sql =
-          'SELECT TreeID, ValueType, SpellValue FROM Leaves WHERE LeafID = ?';
+          'SELECT TreeID, ValueType, StringValue FROM Leaves WHERE LeafID = ?';
       final stmt = db.prepare(sql);
       final result = stmt.select([leaf.id]);
 
       // Check that the database entry matches the input
       expect(result.isNotEmpty, true);
       expect(result.first['TreeID'], tree.id);
-      expect(result.first['ValueType'], 'spell');
-      expect(result.first['SpellValue'], spellDescription);
+      expect(result.first['ValueType'], 'string');
+      expect(result.first['StringValue'], stringDescription);
 
       // Clean up
       stmt.dispose();

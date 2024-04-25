@@ -2,13 +2,13 @@ import 'package:sqlite3/sqlite3.dart';
 import 'leaf.dart';
 
 class Mushroom {
-  List<Leaf> _leaves = [];
+  final List<Leaf> _leaves = [];
   List<Leaf> get leaves => _leaves;
   int? id;
   static String tableName = 'Mushrooms';
   static Database? _db;
 
-  Mushroom({int? id = null}) {
+  Mushroom({int? id}) {
     if (id != null) {
       //if id does not exist, throw error
       final selectSql =
@@ -75,6 +75,7 @@ class Mushroom {
     for (var i = 0; i < _leaves.length; i++) {
       if (_leaves[i].tree.id == leaf.tree.id) {
         await _removeMycelium(_leaves[i]);
+        leaves[i].delete(); //
         _leaves.removeAt(i);
         break;
       }

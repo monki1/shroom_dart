@@ -2,7 +2,7 @@ import 'package:shroom/shroom.dart';
 import 'package:shroom/src/models/macroshroom.dart';
 
 import 'package:test/test.dart';
-import 'package:shroom/shroom_data.dart';
+import 'package:shroom/src/models/shroom_data.dart';
 
 final testDatabaseFilePath =
     'test_database' + DateTime.now().toString() + '.db';

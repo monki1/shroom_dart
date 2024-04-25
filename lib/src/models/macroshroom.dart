@@ -9,7 +9,8 @@ class MacroShroom extends Mushroom {
     _db = db;
   }
 
-  MacroShroom({int? id}) : super(id: id);
+  // ignore: avoid_init_to_null
+  MacroShroom({super.id = null});
 
   static Future<MacroShroom> fromMushroom(
       String name, Mushroom mushroom) async {

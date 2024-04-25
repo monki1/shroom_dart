@@ -1,3 +1,5 @@
+import 'package:shroom/src/models/list.dart';
+
 import 'models/macroshroom.dart';
 import 'models/mushroom.dart';
 import 'models/leaf.dart';
@@ -22,6 +24,7 @@ class ShroomBase {
     Leaf.setDB(dbManager.getDatabase());
     Mushroom.setDB(dbManager.getDatabase());
     MacroShroom.setDB(dbManager.getDatabase());
+    LeafList.setDB(dbManager.getDatabase());
   }
 
   ShroomBase(this.mushroom);
