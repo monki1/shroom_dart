@@ -15,10 +15,10 @@ class ValueTypeHandler {
       for (var item in typeDetails.values) item[0]: null
     };
 
-    // // Check if the provided valueType is valid and set the appropriate field.
-    // if (isValidType(valueType)) {
-    //   String valueKey = typeDetails[valueType]![0];
-    //   dataMap[valueKey] = value;
+    // Check if the provided valueType is valid and set the appropriate field.
+    // if (ShroomData.isValidType(valueType)) {
+    String valueKey = typeDetails[valueType]![0];
+    dataMap[valueKey] = value;
     // }
 
     return dataMap;
