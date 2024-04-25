@@ -23,6 +23,7 @@ void main() async {
   // var dataInt = ShroomData('int', 42);
   // var dataFloat = ShroomData('float', 3.14);
   // var dataBinary = ShroomData('binary', [0, 1, 2, 3]); 
+  // var dataList= ShroomData('list', [ShroomData('int',1)]) //
   await shroom.set('key', data);
 
   // Retrieve the data from the Shroom
@@ -38,6 +39,7 @@ void main() async {
   Shroom shroomByName = await Shroom.fromName('test');
   if (shroomByName != null) {
     print('Shroom by name: ${shroomByName.name}');
+    print('data:${shroomByName.value}');
   }
 
   // Remove the data from the Shroom
