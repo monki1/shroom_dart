@@ -35,7 +35,6 @@ class ShroomData {
     if (!isValidType(type)) {
       throw ArgumentError('Invalid value type');
     }
-    // Check value is of the correct type
   }
 
   static String getColumnString(String type) {
