@@ -32,17 +32,31 @@ class ShroomData {
 
   ShroomData(this.type, this.value) {
     // Check type is in typeDetails
-    if (!typeDetails.containsKey(type)) {
+    if (!isValidType(type)) {
       throw ArgumentError('Invalid value type');
     }
     // Check value is of the correct type
   }
 
-  static String getColumn(String type) {
+  static String getColumnString(String type) {
     return typeDetails[type]![0] as String;
+  }
+
+  static String get allColumnsString {
+    //if not N/A, join the column names with a comma
+    return typeDetails.values
+        .where((element) => element[0] != 'N/A')
+        .map((e) => e[0] as String)
+        .join(', ');
   }
 
   String get column {
     return typeDetails[type]![0] as String;
   }
+
+  static bool isValidType(String type) {
+    return typeDetails.containsKey(type);
+  }
+
+  
 }

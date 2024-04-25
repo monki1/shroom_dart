@@ -23,7 +23,7 @@ class LeafList {
     // List<ShroomData> list = [];
     for (var row in result) {
       data[row['OrderIndex']] = ShroomData(
-          row['ValueType'], row[ShroomData.getColumn(row['ValueType'])]);
+          row['ValueType'], row[ShroomData.getColumnString(row['ValueType'])]);
     }
     //sort the map into a list by order index
     listItems = data.values.toList();
@@ -45,7 +45,7 @@ class LeafList {
     final listItems = newLeafList.listItems;
     for (int i = 0; i < listItems.length; i++) {
       final value = listItems[i].value;
-      final key = ShroomData.getColumn(listItems[i].type);
+      final key = ShroomData.getColumnString(listItems[i].type);
       String sql =
           'UPDATE ListItems SET $key = $value WHERE LeafID = $leafId AND OrderIndex = $i';
       var stmt = _db!.prepare(sql);

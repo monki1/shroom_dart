@@ -1,4 +1,5 @@
 import 'package:shroom/src/models/list.dart';
+import 'package:shroom/src/models/shroom_data.dart';
 import 'package:sqlite3/sqlite3.dart';
 import 'tree.dart';
 import 'leaf_helper.dart';
@@ -13,7 +14,7 @@ class Leaf {
   static Database? _db;
 
   Leaf({required this.tree, required this.valueType, this.value, this.id}) {
-    if (!ValueTypeHandler.isValidType(valueType)) {
+    if (!ShroomData.isValidType(valueType)) {
       throw ArgumentError('Invalid value type');
     }
     if (id == null) {
@@ -23,7 +24,7 @@ class Leaf {
 
   static Leaf getLeafById(int leafId) {
     final sql = 'SELECT TreeID, ValueType, ' +
-        ValueTypeHandler.getValueColumns() +
+        ShroomData.allColumnsString +
         ' FROM $tableName WHERE LeafID = ?';
     final result = DatabaseHelper.select(_db!, sql, [leafId]);
     if (result.isEmpty) {
@@ -74,19 +75,10 @@ class Leaf {
 
   void _checkAndCreateId() {
     if (id != null) return;
-
-    // final sql =
-    //     'SELECT LeafID FROM $tableName WHERE TreeID = ? AND ValueType = ?';
-    // final result = DatabaseHelper.select(_db!, sql, [tree.id, valueType]);
-    // if (result.isNotEmpty) {
-    //   //compare the the return value is the same
-    //   id = result.first['LeafID'] as int;
-    // } else {
     final insertSql =
         'INSERT INTO $tableName (TreeID, ValueType) VALUES (?, ?)';
     DatabaseHelper.executeInsertOrUpdate(_db!, insertSql, [tree.id, valueType]);
     id = _db!.lastInsertRowId;
-    // }
   }
 
   void delete() {
