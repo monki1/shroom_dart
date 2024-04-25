@@ -57,6 +57,4 @@ class ShroomData {
   static bool isValidType(String type) {
     return typeDetails.containsKey(type);
   }
-
-  
 }
