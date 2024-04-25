@@ -70,8 +70,6 @@ class Shroom {
     await shroomBase.mushroom.removeLeaf(name);
   }
 
-  
-
   int get id {
     return shroomBase.id;
   }
