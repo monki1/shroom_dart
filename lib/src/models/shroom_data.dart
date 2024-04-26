@@ -21,6 +21,10 @@ class ShroomData {
       'MushroomValue',
       int,
     ],
+    'bool': [
+      'BoolValue', //sql type: BIT
+      int, //0 or 1
+    ],
     'list': [
       'N/A',
       List,

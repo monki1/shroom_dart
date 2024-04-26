@@ -23,7 +23,8 @@ CREATE TABLE Leaves (
     MushroomValue INTEGER,
 
     BinaryValue BLOB,
-    --  add DateTimeValue with TimeStamp,
+    BoolValue BIT,
+--    
     FOREIGN KEY (TreeID) REFERENCES Trees(TreeID),
     FOREIGN KEY (MushroomValue) REFERENCES Mushrooms(MushroomID)
 );
@@ -47,5 +48,7 @@ CREATE TABLE ListItems (
     FloatValue REAL,
     StringValue TEXT,
     MushroomValue INTEGER,
+    BinaryValue BLOB,
+    BoolValue BIT,
     FOREIGN KEY (LeafID) REFERENCES Leaves(LeafID)
 );

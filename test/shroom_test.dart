@@ -2,7 +2,6 @@ import 'package:shroom/shroom.dart';
 import 'package:shroom/src/models/macroshroom.dart';
 
 import 'package:test/test.dart';
-import 'package:shroom/src/models/shroom_data.dart';
 
 final testDatabaseFilePath =
     'test_database' + DateTime.now().toString() + '.db';
@@ -71,6 +70,19 @@ void main() {
           ShroomData('list', [ShroomData('string', '123')]);
       await shroom.set('key', exampleShroomData);
       final retrievedData = shroom.data['key'];
+
+      expect(retrievedData?.type, exampleShroomData.type);
+      expect(retrievedData?.value[0].value, exampleShroomData.value[0].value);
+    });
+
+    test('Shroom Set Bool', () async {
+      // Test setting data on a Shroom object.
+      final shroom = await Shroom.create(name: 'test');
+      final exampleShroomData =
+          ShroomData('list', [ShroomData('bool', 0)]);
+      await shroom.set('key', exampleShroomData);
+      final retrievedData = shroom.data['key'];
+      print(retrievedData?.value[0].value);
 
       expect(retrievedData?.type, exampleShroomData.type);
       expect(retrievedData?.value[0].value, exampleShroomData.value[0].value);
