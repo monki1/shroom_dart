@@ -1,6 +1,7 @@
 import '/src/shroom_base.dart';
 import 'src/models/shroom_data.dart';
 import '/src/models/leaf.dart';
+export 'src/models/shroom_data.dart';
 
 class Shroom {
   late ShroomBase shroomBase;
