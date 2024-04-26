@@ -79,7 +79,7 @@ void main() {
       // Test setting data on a Shroom object.
       final shroom = await Shroom.create(name: 'test');
       final exampleShroomData =
-          ShroomData('list', [ShroomData('bool', 0)]);
+          ShroomData('list', [ShroomData('bool', false)]);
       await shroom.set('key', exampleShroomData);
       final retrievedData = shroom.data['key'];
       print(retrievedData?.value[0].value);
