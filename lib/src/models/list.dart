@@ -40,14 +40,65 @@ class LeafList {
     return newLeafList.listItems;
   }
 
-  static save(List<ShroomData> list, int leafId) {
-    LeafList newLeafList = LeafList(list);
+  static _saveInList(List list, int listItemID) {
+    LeafList newLeafList = LeafList(list.isEmpty ? []:list as List<ShroomData>);
     final listItems = newLeafList.listItems;
     for (int i = 0; i < listItems.length; i++) {
       final value = listItems[i].value;
+      final type = listItems[i].type;
+
+      if(type == 'list'){
+        String sql =
+          'UPDATE ListItems SET ValueType = \'$type\' WHERE SuperListItemID = $listItemID AND OrderIndex = $i';
+      var stmt = _db!.prepare(sql);
+      stmt.execute();
+      stmt.dispose();
+      String getLastId = 'SELECT last_insert_rowid()';
+      int lastId = _db!.select(getLastId)[0]['last_insert_rowid()'];
+
+
+        
+        LeafList._saveInList(value, lastId);
+        continue;
+      }
+
+
+
       final key = ShroomData.getColumnString(listItems[i].type);
       String sql =
-          'UPDATE ListItems SET $key = $value WHERE LeafID = $leafId AND OrderIndex = $i';
+          'UPDATE ListItems SET $key = $value WHERE SuperListItemID = $listItemID AND OrderIndex = $i';
+      var stmt = _db!.prepare(sql);
+      stmt.execute();
+      stmt.dispose();
+    }
+  }
+
+
+  static save(List list, int leafId) {
+    LeafList newLeafList = LeafList(list.isEmpty ? []:list as List<ShroomData>);
+    final listItems = newLeafList.listItems;
+    for (int i = 0; i < listItems.length; i++) {
+      final value = listItems[i].value;
+      final type = listItems[i].type;
+
+      if(type == 'list'){
+        String sql =
+          // 'UPDATE ListItems SET ValueType = \'$type\' WHERE LeafID = $leafId AND OrderIndex = $i';
+          'UPDATE ListItems SET ValueType = \'$type\' WHERE LeafID = $leafId AND OrderIndex = $i';
+      var stmt = _db!.prepare(sql);
+      stmt.execute();
+      stmt.dispose();
+      String getLastId = 'SELECT last_insert_rowid()';
+      int lastId = _db!.select(getLastId)[0]['last_insert_rowid()'];        
+        LeafList._saveInList(value, lastId);
+        continue;
+      }
+
+
+
+      final key = ShroomData.getColumnString(listItems[i].type);
+      String sql =
+          'UPDATE ListItems SET $key = $value WHERE LeafID = $leafId AND OrderIndex = $i AND ValueType = \'$type\'';
       var stmt = _db!.prepare(sql);
       stmt.execute();
       stmt.dispose();

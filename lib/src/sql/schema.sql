@@ -41,14 +41,19 @@ CREATE TABLE Mycelium (
 
 CREATE TABLE ListItems (
     ListItemID INTEGER PRIMARY KEY,
+    -- 
     LeafID INTEGER,
+    SuperListItemID INTEGER,
+    -- 
     OrderIndex INTEGER,
-    ValueType TEXT CHECK(ValueType IN ('int', 'float', 'string', 'mushroom', 'binary')),
+    -- 
+    ValueType TEXT CHECK(ValueType IN ('int', 'float', 'string', 'mushroom', 'binary', 'list')),
     IntValue INTEGER,
     FloatValue REAL,
     StringValue TEXT,
     MushroomValue INTEGER,
     BinaryValue BLOB,
     BoolValue BIT,
+    -- 
     FOREIGN KEY (LeafID) REFERENCES Leaves(LeafID)
 );

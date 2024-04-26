@@ -87,6 +87,21 @@ void main() {
       expect(retrievedData?.type, exampleShroomData.type);
       expect(retrievedData?.value[0].value, exampleShroomData.value[0].value);
     });
+        test('Shroom Set 3D List', () async {
+      // Test setting data on a Shroom object.
+      final shroom = await Shroom.create(name: 'test');
+      final exampleShroomData =
+          ShroomData('list', 
+            [ShroomData('list', [
+              ShroomData('list', [ShroomData('int', 1)])]), 
+            ShroomData('list', [])]);
+      await shroom.set('key', exampleShroomData);
+      final retrievedData = shroom.data['key'];
+      print(retrievedData?.value[0].value);
+
+      expect(retrievedData?.type, exampleShroomData.type);
+      expect(retrievedData?.value[0].value[0].value[0], exampleShroomData.value[0].value[0].value[0]);
+    });
 
     test('Shroom Remove Data', () async {
       // Test removing data from a Shroom object.
