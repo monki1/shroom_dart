@@ -23,7 +23,7 @@ class ShroomData {
     ],
     'bool': [
       'BoolValue', //sql type: BIT
-      int, //0 or 1
+      bool, //or int: (0 or 1 ) or (true or false)
     ],
     'list': [
       'N/A',
