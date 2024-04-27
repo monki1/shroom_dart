@@ -60,4 +60,8 @@ class ShroomData {
   static bool isValidType(String type) {
     return typeDetails.containsKey(type);
   }
+  @override
+  String toString() {
+    return 'Type: $type, Value: ${value is List ? [for (var item in value) item.toString()] : value}';
+  }
 }

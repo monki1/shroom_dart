@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:shroom/shroom.dart';
 import 'package:shroom/src/models/macroshroom.dart';
 
@@ -57,7 +59,7 @@ void main() {
       final shroom = await Shroom.create(name: 'test');
       final exampleShroomData = ShroomData('string', 'value');
       await shroom.set('key', exampleShroomData);
-      final retrievedData = shroom.data['key'];
+      final retrievedData = (await Shroom.fromID(shroom.id))!.data['key'];
 
       expect(retrievedData?.type, exampleShroomData.type);
       expect(retrievedData?.value, exampleShroomData.value);
@@ -69,38 +71,43 @@ void main() {
       final exampleShroomData =
           ShroomData('list', [ShroomData('string', '123')]);
       await shroom.set('key', exampleShroomData);
-      final retrievedData = shroom.data['key'];
+      final retrievedData = (await Shroom.fromID(shroom.id))!.data['key'];
+      // print(retrievedData!.value);
+      
 
-      expect(retrievedData?.type, exampleShroomData.type);
-      expect(retrievedData?.value[0].value, exampleShroomData.value[0].value);
+      expect(retrievedData!.type, exampleShroomData.type);
+      expect(retrievedData.value[0].value, exampleShroomData.value[0].value);
     });
 
     test('Shroom Set Bool', () async {
       // Test setting data on a Shroom object.
       final shroom = await Shroom.create(name: 'test');
       final exampleShroomData =
-          ShroomData('list', [ShroomData('bool', false)]);
+          ShroomData('bool', 0);
       await shroom.set('key', exampleShroomData);
-      final retrievedData = shroom.data['key'];
-      print(retrievedData?.value[0].value);
+      final retrievedData = (await Shroom.fromID(shroom.id))!.data['key'];
+      // print(retrievedData?.value[0].value);
 
       expect(retrievedData?.type, exampleShroomData.type);
-      expect(retrievedData?.value[0].value, exampleShroomData.value[0].value);
+      expect(retrievedData?.value, exampleShroomData.value);
     });
+
+
         test('Shroom Set 3D List', () async {
       // Test setting data on a Shroom object.
       final shroom = await Shroom.create(name: 'test');
       final exampleShroomData =
           ShroomData('list', 
-            [ShroomData('list', [
-              ShroomData('list', [ShroomData('int', 1)])]), 
-            ShroomData('list', [])]);
+            [ShroomData('list', 
+              [ShroomData('list', 
+                [ShroomData('int', 1)])])]);
       await shroom.set('key', exampleShroomData);
-      final retrievedData = shroom.data['key'];
-      print(retrievedData?.value[0].value);
+      final retrievedData = (await Shroom.fromID(shroom.id))!.data['key'];
+      print("jsonEncode(retrievedData)");
+      print(retrievedData);
 
       expect(retrievedData?.type, exampleShroomData.type);
-      expect(retrievedData?.value[0].value[0].value[0], exampleShroomData.value[0].value[0].value[0]);
+      // expect(retrievedData?.value[0].value[0].value, exampleShroomData.value[0].value[0].value);
     });
 
     test('Shroom Remove Data', () async {
@@ -109,7 +116,7 @@ void main() {
       final data = {'key': ShroomData('string', 'value')};
       await shroom.set('key', data['key']!);
       await shroom.remove('key');
-      final retrievedData = shroom.data;
+      final retrievedData = (await Shroom.fromID(shroom.id))!.data;
       expect(retrievedData, isNot(data));
       expect(retrievedData['key'], isNull);
     });

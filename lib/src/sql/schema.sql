@@ -16,7 +16,7 @@ CREATE TABLE Trees (
 CREATE TABLE Leaves (
     LeafID INTEGER PRIMARY KEY,
     TreeID INTEGER,
-    ValueType TEXT CHECK(ValueType IN ('int', 'float', 'string', 'mushroom', 'binary', 'list')),
+    ValueType TEXT CHECK(ValueType IN ('int', 'float', 'string', 'mushroom', 'binary', 'list', 'bool')),
     IntValue INTEGER,
     FloatValue REAL,
     StringValue TEXT,
@@ -47,7 +47,7 @@ CREATE TABLE ListItems (
     -- 
     OrderIndex INTEGER,
     -- 
-    ValueType TEXT CHECK(ValueType IN ('int', 'float', 'string', 'mushroom', 'binary', 'list')),
+    ValueType TEXT CHECK(ValueType IN ('int', 'float', 'string', 'mushroom', 'binary', 'list', 'bool')),
     IntValue INTEGER,
     FloatValue REAL,
     StringValue TEXT,
