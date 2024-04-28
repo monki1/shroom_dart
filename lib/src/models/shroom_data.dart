@@ -2,37 +2,46 @@ class ShroomData {
   static Map<String, List<dynamic>> typeDetails = {
     'int': [
       //type String
-      'IntValue', //sql column name
+      'IntValue', //sql table name
       int, //dart type
     ],
     'float': [
-      'FloatValue',
+      'float',
       double,
     ],
     'string': [
-      'StringValue',
+      'string',
       String,
     ],
     'binary': [
-      'BinaryValue',
+      'binary',
       List<int>,
     ],
     'mushroom': [
-      'MushroomValue',
+      'mushroom',
       int,
     ],
     'bool': [
-      'BoolValue', //sql type: BIT
+      'bool', //sql type: BIT
       bool, //or int: (0 or 1 ) or (true or false)
     ],
     'list': [
-      'N/A',
+      'list_item',
       List,
     ],
   };
 
+  static bool isValidType(String type) {
+    return typeDetails.containsKey(type);
+  }
+
+  static String getTableName(String type) {
+    return typeDetails[type]![0] as String;
+  }
+
   String type;
   dynamic value;
+  int? id;
 
   ShroomData(this.type, this.value) {
     // Check type is in typeDetails
@@ -41,27 +50,14 @@ class ShroomData {
     }
   }
 
-  static String getColumnString(String type) {
+  String get tableName {
     return typeDetails[type]![0] as String;
   }
 
-  static String get allColumnsString {
-    //if not N/A, join the column names with a comma
-    return typeDetails.values
-        .where((element) => element[0] != 'N/A')
-        .map((e) => e[0] as String)
-        .join(', ');
-  }
-
-  String get column {
-    return typeDetails[type]![0] as String;
-  }
-
-  static bool isValidType(String type) {
-    return typeDetails.containsKey(type);
-  }
   @override
   String toString() {
-    return 'Type: $type, Value: ${value is List ? [for (var item in value) item.toString()] : value}';
+    return 'Type: $type, Value: ${value is List ? [
+        for (var item in value) item.toString()
+      ] : value}';
   }
 }

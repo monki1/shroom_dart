@@ -1,85 +1,29 @@
-import '/src/shroom_base.dart';
-import 'src/models/shroom_data.dart';
-import '/src/models/leaf.dart';
+import 'package:shroom/src/models/mushroom.dart';
+import 'package:shroom/src/sql/db.dart';
+
 export 'src/models/shroom_data.dart';
 
-class Shroom {
-  late ShroomBase shroomBase;
+const String SCHEMA_PATH = 'lib/src/sql/schema.sql';
+const String DEFAULT_DB_PATH = 'shroom.db';
 
-  static init(String path) {
-    ShroomBase.init(path);
+class Shroom extends Mushroom {
+  static late String _path;
+
+  static initDB({String? path}) {
+    _path = path ?? DEFAULT_DB_PATH;
+    DatabaseManager dbManager = DatabaseManager(
+      schemaFilePath: SCHEMA_PATH,
+      databaseFilePath: _path,
+    );
+    dbManager.initDatabase();
+    Mushroom.setDB(dbManager.getDatabase());
   }
 
-  static removeDatabase() {
-    ShroomBase.dbManager.removeDatabase();
-  }
-
-  Shroom();
-
-  static Future<Shroom> create({String? name}) async {
-    try {
-      Shroom sb1 = Shroom();
-      if (name != null) {
-        sb1.shroomBase = await ShroomBase.createShroomMacro(name);
-      } else {
-        sb1.shroomBase = ShroomBase.createShroom();
-      }
-      return sb1;
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  static Future<Shroom?> fromID(int id) async {
-    Shroom sb1 = Shroom();
-    try {
-      sb1.shroomBase = await ShroomBase.getShroomById(id);
-      return sb1;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  static Future<Shroom?> fromName(String name) async {
-    Shroom sb1 = Shroom();
-    try {
-      sb1.shroomBase = (await ShroomBase.getShroomByName(name))!;
-      return sb1;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  Map<String, ShroomData> get data {
-    List<Leaf> leaves = shroomBase.mushroom.leaves;
-    Map<String, ShroomData> data = {};
-    for (Leaf leaf in leaves) {
-      data[leaf.tree.name] = ShroomData(leaf.valueType, leaf.value);
-    }
-    return data;
-  }
-
-  Future<void> delete() async {
-    await shroomBase.mushroom.delete();
-  }
-
-  Future<void> set(String name, ShroomData shroomData) async {
-    await shroomBase.upsert(name, shroomData.type, shroomData.value);
-  }
-
-  Future<void> remove(String name) async {
-    await shroomBase.mushroom.removeLeaf(name);
-  }
-
-  int get id {
-    return shroomBase.id;
-  }
-
-  String? get name {
-    return shroomBase.name;
-  }
-
-  set name(String? name) {
-    shroomBase.name = name;
+  static deleteDB({String? path}) {
+    DatabaseManager dbManager = DatabaseManager(
+      schemaFilePath: SCHEMA_PATH,
+      databaseFilePath: path ?? _path,
+    );
+    dbManager.removeDatabase();
   }
 }

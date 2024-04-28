@@ -1,5 +1,8 @@
+
+
 CREATE TABLE Mushrooms (
     MushroomID INTEGER PRIMARY KEY
+
 );
 
 CREATE TABLE MacroShroomNames (
@@ -16,44 +19,65 @@ CREATE TABLE Trees (
 CREATE TABLE Leaves (
     LeafID INTEGER PRIMARY KEY,
     TreeID INTEGER,
+    MushroomID INTEGER,
+    -- 
     ValueType TEXT CHECK(ValueType IN ('int', 'float', 'string', 'mushroom', 'binary', 'list', 'bool')),
-    IntValue INTEGER,
-    FloatValue REAL,
-    StringValue TEXT,
-    MushroomValue INTEGER,
-
-    BinaryValue BLOB,
-    BoolValue BIT,
+    ValueID INTEGER, 
 --    
     FOREIGN KEY (TreeID) REFERENCES Trees(TreeID),
-    FOREIGN KEY (MushroomValue) REFERENCES Mushrooms(MushroomID)
+    FOREIGN KEY (MushroomID) REFERENCES Mushrooms(MushroomID)
+);
+-- Table for storing integer values
+CREATE TABLE int (
+    id INTEGER PRIMARY KEY,
+    value INTEGER
 );
 
-CREATE TABLE Mycelium (
-    MyceliumID INTEGER PRIMARY KEY,
-    MushroomID INTEGER,
-    LeafID INTEGER,
-    FOREIGN KEY (MushroomID) REFERENCES Mushrooms(MushroomID),
-    FOREIGN KEY (LeafID) REFERENCES Leaves(LeafID)
+-- Table for storing float values
+CREATE TABLE float (
+    id INTEGER PRIMARY KEY,
+    value REAL
+);
+
+-- Table for storing string values
+CREATE TABLE string (
+    id INTEGER PRIMARY KEY,
+    value TEXT
+);
+
+-- Table for storing mushroom values; the value is a foreign key reference to the Mushrooms table
+CREATE TABLE mushroom (
+    id INTEGER PRIMARY KEY,
+    value INTEGER,
+    FOREIGN KEY(value) REFERENCES Mushrooms(id)
+);
+
+-- Table for storing binary values
+CREATE TABLE binary (
+    id INTEGER PRIMARY KEY,
+    value BLOB
+
+);
+
+-- Table for storing boolean values
+CREATE TABLE bool (
+    id INTEGER PRIMARY KEY,
+    value BIT
+
 );
 
 
-
-CREATE TABLE ListItems (
-    ListItemID INTEGER PRIMARY KEY,
+CREATE TABLE list_item (
+    id INTEGER PRIMARY KEY,
     -- 
-    LeafID INTEGER,
-    SuperListItemID INTEGER,
+    leaf_id INTEGER,
+    super_list_item_id INTEGER,
     -- 
-    OrderIndex INTEGER,
+    position INTEGER,
     -- 
     ValueType TEXT CHECK(ValueType IN ('int', 'float', 'string', 'mushroom', 'binary', 'list', 'bool')),
-    IntValue INTEGER,
-    FloatValue REAL,
-    StringValue TEXT,
-    MushroomValue INTEGER,
-    BinaryValue BLOB,
-    BoolValue BIT,
+    ValueID INTEGER,
     -- 
-    FOREIGN KEY (LeafID) REFERENCES Leaves(LeafID)
+    FOREIGN KEY (leaf_id) REFERENCES Leaves(LeafID),
+    FOREIGN KEY (super_list_item_id) REFERENCES list_item(id)    
 );
