@@ -1,10 +1,8 @@
-
 import 'package:test/test.dart';
 import 'package:shroom/src/sql/db.dart';
 import 'package:shroom/src/models/shroom_data.dart';
 import 'package:sqlite3/sqlite3.dart';
 import 'package:shroom/src/models/database_extension/database_extension.dart';
-
 
 void main() {
   group('Value Extension Tests', () {
