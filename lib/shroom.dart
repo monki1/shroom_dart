@@ -3,7 +3,9 @@ import 'package:shroom/src/sql/db.dart';
 
 export 'src/models/shroom_data.dart';
 
+// ignore: constant_identifier_names
 const String SCHEMA_PATH = 'lib/src/sql/schema.sql';
+// ignore: constant_identifier_names
 const String DEFAULT_DB_PATH = 'shroom.db';
 
 class Shroom extends Mushroom {

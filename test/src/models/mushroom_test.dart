@@ -5,7 +5,7 @@ import 'package:shroom/src/sql/db.dart';
 void main() {
   group('Mushroom Tests', () {
     late DatabaseManager dbManager;
-    late Mushroom mushroom;
+    // late Mushroom mushroom;
 
     setUp(() {
       dbManager = DatabaseManager(
@@ -14,7 +14,7 @@ void main() {
       );
       dbManager.initDatabase();
       Mushroom.setDB(dbManager.getDatabase());
-      mushroom = Mushroom();
+      // mushroom = Mushroom();
     });
 
     test('Add/Remove Leaf to Mushroom', () async {});

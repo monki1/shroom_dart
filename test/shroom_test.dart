@@ -3,7 +3,7 @@ import 'package:shroom/shroom.dart';
 import 'package:test/test.dart';
 
 final testDatabaseFilePath =
-    'test_database' + DateTime.now().toString() + '.db';
+    'test_database${DateTime.now()}.db';
 
 void main() {
   group('Shroom Tests', () {

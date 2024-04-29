@@ -6,7 +6,7 @@ class DatabaseManager {
   final String databaseFilePath;
 
   DatabaseManager(
-      {required this.schemaFilePath, required this.databaseFilePath}) {}
+      {required this.schemaFilePath, required this.databaseFilePath});
 
   Database getDatabase() {
     final dbFile = File(databaseFilePath);

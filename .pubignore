@@ -1,0 +1,2 @@
+# Ignore specific files/folders from being published to Pub.dev
+context.sh
