@@ -28,4 +28,10 @@ class Shroom extends Mushroom {
   }
 
   Shroom({super.name, super.id});
+
+  Shroom.get({super.id, super.name});
+
+
+  // ignore: use_super_parameters
+  Shroom.create({name}) : super.create(name);
 }

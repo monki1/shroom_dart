@@ -111,6 +111,14 @@ void main() {
       expect(Shroom(name: 'test2').id, shroom.id);
     });
 
+        test('Shroom constructors', () async {
+      Shroom shroom = Shroom.create(name: 'test');
+      shroom.name = 'test2';
+      expect(Shroom.get(name:'test2').id, shroom.id);
+      Shroom shroom2 = Shroom.create();
+      expect(shroom2.id, isNotNull);
+    });
+
     test('Shroom set name to null', () async {
       Shroom shroom = Shroom(name: 'test');
       shroom.name = null;
