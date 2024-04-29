@@ -1,6 +1,8 @@
 name: shroom
-description: Database, a shroom is a node that stores data.Edges can be stored as data in Nodes.
-version: 1.0.0
+description: 
+  Flexible, minimalistic, and fast Graph Database for Dart and Flutter.
+  GraphQL/GraphDB/Graph Database
+version: 1.0.1
 repository: https://github.com/monki1/shroom_dart
 
 environment:
