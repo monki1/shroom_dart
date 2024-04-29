@@ -1,115 +1,60 @@
-# Shroom Class README
+/GraphDB/Graph Database/
 
-## Introduction
+# Shroom Library Documentation
 
-The Shroom class is a part of a larger project that involves managing data using a tree-like structure. It provides a way to create, retrieve, modify, and delete data objects, known as "shrooms," in a hierarchical manner.
+## Constructors
 
-## Usage
+- **`Shroom.create({String? name})`**:
+  - Instantiates a new `Shroom` with an optional name. If provided, the instance is initialized with that name.
+- **`Shroom.get({String name, String id})`**:
+  - Retrieves a `Shroom` instance by its ID or name. At least one parameter must be provided and not null. This constructor will throw an exception if no matching `Shroom` is found.
 
-Here's an example of how to use the Shroom class:
+## Static Methods
+
+- **`initDB({String? path})`**:
+  - Initializes the database at a specified path, or uses a default location if no path is provided. Essential for setting up the storage environment for `Shroom` instances.
+- **`deleteDB({String? path})`**:
+  - Deletes the database located at a specified path or the default location. Typically used for resetting or cleaning up the database environment in testing scenarios.
+
+## Instance Methods
+
+- **`upsert(String key, ShroomData data)`**:
+  - Inserts or updates a piece of data identified by the key within this `Shroom` instance. Allows for dynamic data management.
+- **`delete()`**:
+  - Deletes this `Shroom` instance from the database, removing all its stored data.
+- **`remove(String key)`**:
+  - Removes the data associated with the specified key from this `Shroom` instance, useful for deleting specific entries without affecting the entire dataset.
+
+## Usage Example
+
+Below is an example demonstrating the creation of a `Shroom`, updating data, removing a specific data entry, and general cleanup:
 
 ```dart
 import 'package:shroom/shroom.dart';
 
-void main() async {
-  // Initialize the Shroom database
-  Shroom.init('path/to/database.db');
+void main() {
+  // Initialize the database
+  Shroom.initDB();
 
-  // Create a new Shroom object with a name
-  Shroom shroom = await Shroom.create(name: 'test');
+  // Create a new Shroom instance
+  var shroom = Shroom.create(name: 'example');
+  shroom.upsert('description', ShroomData('string', 'A simple example of using Shroom'));
+  shroom.upsert('type', ShroomData('string', 'educational'));
 
-  // Set some data on the Shroom
-  ShroomData data = ShroomData('string', 'value');
-  // var dataInt = ShroomData('int', 42);
-  // var dataFloat = ShroomData('float', 3.14);
-  // var dataBinary = ShroomData('binary', [0, 1, 2, 3]); 
-  // var dataList= ShroomData('list', [ShroomData('int',1)]) //
-  await shroom.set('key', data);
+  // Retrieve the Shroom by name (assuming `name` is a unique identifier)
+  var retrievedShroom = Shroom.get(name: 'example');
+  print('Retrieved Shroom: ${retrievedShroom.data}');
 
-  // Retrieve the data from the Shroom
-  ShroomData retrievedData = shroom.data['key'];
+  // Remove the 'type' data entry
+  retrievedShroom.remove('type');
+  print('Updated Shroom data after removal: ${retrievedShroom.data}');
 
-  // Retrieve a Shroom by ID
-  Shroom shroomById = await Shroom.fromID(1);
-  if (shroomById != null) {
-    print('Shroom by ID: ${shroomById.name}');
-  }
+  // Cleanup the instance
+  retrievedShroom.delete();
 
-  // Retrieve a Shroom by name
-  Shroom shroomByName = await Shroom.fromName('test');
-  if (shroomByName != null) {
-    print('Shroom by name: ${shroomByName.name}');
-    print('data:${shroomByName.value}');
-  }
-
-  // Remove the data from the Shroom
-  await shroom.remove('key');
-
-  // Modify the name of the Shroom
-  shroom.name = 'new name';
-  shroom.name = null;
-
-  // Delete the Shroom
-  await shroom.delete();
+  // Optionally, delete the database when done
+  Shroom.deleteDB();
 }
 ```
 
-## Shroom Class Methods
-
-Here's the updated summary with the return types at the beginning, similar to a function declaration:
-
-
-- class methods:
-    - `.init(path: String)`: Initializes the Shroom database at the specified path. This method does not return any value.
-    - `.create({name: String})`: Creates a new Shroom object with an optional name. It returns a `Future<Shroom>` object, which represents the newly created Shroom.
-    - `.fromID(id: int)`: Retrieves a Shroom object by its ID. It returns a `Future<Shroom?>` object, which may be null if no Shroom with the given ID is found.
-    - `.fromName(name: String)`: Retrieves a Shroom object by its name. It returns a `Future<Shroom?>` object, which may be null if no Shroom with the given name is found.
-    - `.set(name: String, data: ShroomData)`: Sets data on the Shroom object with a given name. The `ShroomData` class represents a piece of data with a specific type and value. This method does not return any value.
-- instance methods:
-    - `.remove(name: String)`: Removes data with the given name from the Shroom object. This method does not return any value.
-    - `.delete()`: Deletes the Shroom object from the database. This method returns a `Future<void>` object.
-    - `.id`: Gets the ID of the Shroom object. The return type is `int`.
-    - `.name`: Gets the name of the Shroom object. The return type is `String?`, indicating that the name may be null.
-    - `.name = value`: Sets the name of the Shroom object. The value can be of type `String?` since the name is optional.
-
-## ShroomData Class
-
-The `ShroomData` class is used to store data in a Shroom object. It has two properties: `type` and `value`. The `type` specifies the data type, such as "int", "float", "string", etc. The `value` holds the actual data value.
-
-## Supported Data Types
-check [ShroomData Dart File](lib/shroom_data.dart)
- and [Schema SQL File](lib/src/sql/schema.sql)
-
-```dart
-class ShroomData {
-  static Map<String, List<dynamic>> typeDetails = {
-    'int': [
-      //type String
-      'IntValue', //sql column name
-      int, //dart type
-    ],
-    'float': [
-      'FloatValue',
-      double,
-    ],
-    'string': [
-      'StringValue',
-      String,
-    ],
-    'binary': [
-      'BinaryValue',
-      List<int>,
-    ]
-    //.......
-  }
-}
-
-```
-
-## Testing
-
-The Shroom class has been thoroughly tested to ensure its functionality. The test files (`shroom_test.dart` and others) contain various test cases that verify the creation, retrieval, modification, and deletion of Shroom objects.
-
-## Conclusion
-
-The Shroom class provides a convenient way to manage data in a hierarchical manner. It offers methods to create, retrieve, modify, and delete data objects, making it a powerful tool for organizing and manipulating data.
+This example ensures a comprehensive demonstration of `Shroom` capabilities, from data management to database control, providing developers with practical insights into the use and flexibility of the library.
