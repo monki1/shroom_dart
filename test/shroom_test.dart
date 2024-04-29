@@ -78,7 +78,7 @@ void main() {
             ShroomData('int', 2),
             ShroomData('list', [
               ShroomData('list', [
-              ShroomData('string', 'string'),
+                ShroomData('string', 'string'),
               ]),
             ]),
             // ])
@@ -88,7 +88,8 @@ void main() {
       Shroom shroom2 = Shroom(name: 'test');
       print(shroom2.data['test']!);
 
-      expect(shroom2.data['test'].toString()==shroom.data['test'].toString(), true);
+      expect(shroom2.data['test'].toString() == shroom.data['test'].toString(),
+          true);
     });
 
     test('Shroom Remove Data', () async {

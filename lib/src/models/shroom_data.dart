@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ShroomData {
   static Map<String, List<dynamic>> typeDetails = {
     'int': [
@@ -56,35 +54,31 @@ class ShroomData {
     return typeDetails[type]![0] as String;
   }
 
-  String _toString({String indent = ""}){
-
-
+  String _toString({String indent = ""}) {
     var valueRepresentation = value;
 
     // Handle list types differently to encode each item.
     if (type == 'list' && value is List) {
       String newIndent = indent + "  ";
-      
-      valueRepresentation = value.map((item) { 
-        return "\n"+item._toString(indent: newIndent);
-        }).toList();
+
+      valueRepresentation = value.map((item) {
+        return "\n" + item._toString(indent: newIndent);
+      }).toList();
     }
 
     // Create a map of the data to be encoded to JSON.
     Map<String, dynamic> dataMap = {
       "type": type,
       'Value': valueRepresentation,
-
     };
 
-    return  indent + dataMap.toString();
-
+    return indent + dataMap.toString();
   }
 
   @override
   String toString() {
     return _toString();
-    }
+  }
 
   @override
   bool operator ==(Object other) {

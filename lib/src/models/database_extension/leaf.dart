@@ -2,6 +2,7 @@ import 'package:shroom/src/models/database_extension/tree.dart';
 import 'package:shroom/src/models/shroom_data.dart';
 import 'package:shroom/src/models/database_extension/value.dart';
 import 'package:sqlite3/sqlite3.dart';
+import 'package:shroom/src/models/database_extension/list.dart';
 
 extension LeafDatabase on Database {
   int addLeaf(int mushroomID, int treeID, ShroomData value) {
