@@ -2,6 +2,17 @@
 
 # Shroom Library Documentation
 
+## Get Started
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  shroom_dart:
+    git:
+      url: https://github.com/monki1/shroom_dart/
+      ref: main
+```
+
 ## Constructors
 
 - **`Shroom.create({String? name})`**:
