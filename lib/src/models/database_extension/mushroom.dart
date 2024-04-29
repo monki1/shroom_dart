@@ -10,20 +10,17 @@ extension MushroomExtension on Database {
     return id;
   }
 
-  // checkMushroomExists(int id) {
-  //   final selectSql =
-  //         'SELECT MushroomID FROM Mushrooms WHERE MushroomID = ?';
-  //     final selectStmt = prepare(selectSql);
-  //     final results = selectStmt.select([id]);
-  //     if (results.isEmpty) {
-  //       throw Exception('Mushroom with id $this.id not found');
-  //     }
-  // }
-
   void deleteMushroom(int id) {
     final deleteSql = 'DELETE FROM Mushrooms WHERE MushroomID = ?';
     final deleteStmt = prepare(deleteSql);
     deleteStmt.execute([id]);
     deleteStmt.dispose();
+  }
+
+  bool checkMushroomExists(int id) {
+    final sql = 'SELECT MushroomID FROM Mushrooms WHERE MushroomID = ?';
+    final stmt = prepare(sql);
+    final result = stmt.select([id]);
+    return result.isNotEmpty;
   }
 }

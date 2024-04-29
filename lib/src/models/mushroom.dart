@@ -29,6 +29,7 @@ class Mushroom {
 
   Mushroom({int? id, String? name}) {
     if (name != null) {
+      _name = name;
       try {
         this.id = _db.getMushroomIDfromName(name);
       } catch (e) {
@@ -37,7 +38,17 @@ class Mushroom {
         return;
       }
     } else if (id != null) {
+      if (_db.checkMushroomExists(id) == false) {
+        throw Exception('Mushroom with id $id not found');
+      }
       this.id = id;
+      //try to get the name from the database
+      try {
+        _name = _db.getNameFromMushroomID(id);
+      } catch (e) {
+        _name = null;
+      }
+
     } else {
       this.id = _db.createEmptyMushroom();
       return;

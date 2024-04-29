@@ -36,4 +36,15 @@ extension Name on Database {
       throw Exception('Name $name not found');
     }
   }
+
+  String getNameFromMushroomID(int id) {
+    final sql = 'SELECT Name FROM MacroShroomNames WHERE MushroomID = ?';
+    final stmt = prepare(sql);
+    final result = stmt.select([id]);
+    if (result.isNotEmpty) {
+      return result.first['Name'] as String;
+    } else {
+      throw Exception('Mushroom with id $id not found');
+    }
+  }
 }

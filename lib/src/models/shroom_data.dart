@@ -2,7 +2,7 @@ class ShroomData {
   static Map<String, List<dynamic>> typeDetails = {
     'int': [
       //type String
-      'IntValue', //sql table name
+      'int', //sql table name
       int, //dart type
     ],
     'float': [
@@ -59,5 +59,26 @@ class ShroomData {
     return 'Type: $type, Value: ${value is List ? [
         for (var item in value) item.toString()
       ] : value}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is ShroomData) {
+      if (other.type == type) {
+        if (type == 'list') {
+          if (other.value.length == value.length) {
+            for (int i = 0; i < value.length; i++) {
+              if (value[i] != other.value[i]) {
+                return false;
+              }
+            }
+            return true;
+          }
+        } else {
+          return other.value == value;
+        }
+      }
+    }
+    return false;
   }
 }
