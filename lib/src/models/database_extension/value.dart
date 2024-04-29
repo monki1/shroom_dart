@@ -43,7 +43,7 @@ extension Value on Database {
       try{
 
         if (item['ValueType'] == 'list') {
-          data[item["position"] as int] = _getSubList(item['list_item_id']);
+          data[item["position"] as int] = _getSubList(item['id']);
         } else {
           data[item["position"] as int] = getValue(item['ValueType'], item['ValueID']);
         }
