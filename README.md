@@ -5,8 +5,6 @@
 ## Get Started
 ```yaml
 dependencies:
-  flutter:
-    sdk: flutter
   shroom_dart:
     git:
       url: https://github.com/monki1/shroom_dart/
