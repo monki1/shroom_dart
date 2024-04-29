@@ -56,5 +56,6 @@ void main() {
   Shroom.deleteDB();
 }
 ```
-
-This example ensures a comprehensive demonstration of `Shroom` capabilities, from data management to database control, providing developers with practical insights into the use and flexibility of the library.
+## Supported Data Types
+check [ShroomData Dart File](lib/src/shroom_data.dart)
+ and [Schema SQL File](lib/src/sql/schema.sql)
