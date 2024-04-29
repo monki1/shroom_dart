@@ -26,4 +26,6 @@ class Shroom extends Mushroom {
     );
     dbManager.removeDatabase();
   }
+
+  Shroom({super.name, super.id});
 }
