@@ -41,7 +41,6 @@ class ShroomData {
 
   String type;
   dynamic value;
-  int? id;
 
   ShroomData(this.type, this.value) {
     // Check type is in typeDetails
