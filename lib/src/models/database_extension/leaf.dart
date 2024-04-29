@@ -5,18 +5,15 @@ import 'package:sqlite3/sqlite3.dart';
 
 extension LeafDatabase on Database {
   int addLeaf(int mushroomID, int treeID, ShroomData value) {
-    // for (int i = 0; i < values.length; i++) {
-    // final value = values[i];
     if (value.type == 'list') {
-      print("add leaf: add top level list");
+      //print("add leaf: add top level list");
       final insertSql =
           'INSERT INTO Leaves (MushroomID, ValueType, TreeID) VALUES (?, ?, ?)';
       final insertStmt = prepare(insertSql);
       insertStmt.execute([mushroomID, value.type, treeID]);
       insertStmt.dispose();
       int thisLeafID = lastInsertRowId;
-      saveList(lastInsertRowId, value.value as List<ShroomData>);
-      print("super list item id: $lastInsertRowId");
+      saveList(thisLeafID, value.value as List<ShroomData>);
       return thisLeafID;
     } else {
       return _addLeafValue(mushroomID, treeID, value);
@@ -30,27 +27,9 @@ extension LeafDatabase on Database {
         'INSERT INTO Leaves (MushroomID, ValueType, ValueID, TreeID) VALUES (?, ?, ?, ?)';
     final insertStmt = prepare(insertSql);
     insertStmt.execute([mushroomID, value.type, dataID, treeID]);
-    insertStmt.dispose();
+    // insertStmt.dispose();
     return lastInsertRowId;
   }
-
-  // _addLeafList(int leafID, List<ShroomData> list) {
-  //   for (int i = 0; i < list.length; i++) {
-  //     print("add top level list item: $i");
-  //     final item = list[i];
-  //     if (item.type == 'list') {
-  //       print("add leaf: add 2nd level sub list");
-  //       saveList(leafID, item.value as List<ShroomData>);
-  //     } else {
-  //       int dataID = saveValue(item.type, item);
-  //       final insertSql =
-  //           'INSERT INTO list_item (leaf_id, position, ValueType, ValueID) VALUES (?, ?, ?, ?)';
-  //       final insertStmt = prepare(insertSql);
-  //       insertStmt.execute([leafID, i, item.type, dataID]);
-  //       insertStmt.dispose();
-  //     }
-  //   }
-  // }
 
   void deleteLeaf(int mushroomID, int treeID) {
     //find the valueID and ValueType
@@ -97,20 +76,22 @@ extension LeafDatabase on Database {
     final stmt = prepare(sql);
     final result = stmt.select([mushroomID]);
     Map<String, ShroomData> leaves = {};
-    print("top level leaves: $result");
-    
+    //print("top level leaves: $result");
+
     for (int i = 0; i < result.length; i++) {
       final leaf = result[i];
       final type = leaf['ValueType'] as String;
       if (type == 'list') {
-        leaves.addAll({getTreeNameFromID(leaf['TreeID']):  getList(leaf['LeafID'] as int)});
-
+        leaves.addAll({
+          getTreeNameFromID(leaf['TreeID']): getList(leaf['LeafID'] as int)
+        });
       } else {
-        leaves.addAll({getTreeNameFromID(leaf['TreeID']) :getValue(type, leaf['ValueID'] as int)});
+        leaves.addAll({
+          getTreeNameFromID(leaf['TreeID']):
+              getValue(type, leaf['ValueID'] as int)
+        });
       }
     }
     return leaves;
   }
-
-  
 }

@@ -48,7 +48,6 @@ class Mushroom {
       } catch (e) {
         _name = null;
       }
-
     } else {
       this.id = _db.createEmptyMushroom();
       return;

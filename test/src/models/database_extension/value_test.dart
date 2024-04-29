@@ -29,37 +29,31 @@ void main() {
       var testData = ShroomData('string', 'testValue');
       int valueID = db.saveValue(testData.tableName, testData);
       ShroomData retrievedData = db.getValue('string', valueID);
-      
+
       expect(retrievedData.value, equals('testValue'));
     });
 
     test('Test Save and Retrieve List', () async {
-      var listData = ShroomData('list', [
-        ShroomData('string', 'testString'),
-        ShroomData('int', 123)
-      ]);
-      int leafID = db.addLeaf(shroomID, treeID, listData); 
+      var listData = ShroomData(
+          'list', [ShroomData('string', 'testString'), ShroomData('int', 123)]);
+      int leafID = db.addLeaf(shroomID, treeID, listData);
       ShroomData retrievedList = db.getList(leafID);
       print(retrievedList);
       Future.delayed(Duration(seconds: 1));
-      
 
       expect(retrievedList.value[0].value, 'testString');
       expect(retrievedList.value[1].value, 123);
-
-      
     });
 
     test('Test Save and Retrieve Nested List', () {
       var nestedListData = ShroomData('list', [
         ShroomData('string', 'outerString'),
-        ShroomData('list', [
-          ShroomData('string', 'innerString'),
-          ShroomData('int', 456)
-        ])
+        ShroomData('list',
+            [ShroomData('string', 'innerString'), ShroomData('int', 456)])
       ]);
 
-      int leafid = db.addLeaf(shroomID, treeID, nestedListData); // Again, `2` is a placeholder LeafID
+      int leafid = db.addLeaf(shroomID, treeID,
+          nestedListData); // Again, `2` is a placeholder LeafID
       ShroomData retrievedNestedList = db.getList(leafid);
 
       expect(retrievedNestedList.value[0].value, 'outerString');

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:shroom/shroom.dart';
 
 import 'package:test/test.dart';
@@ -44,7 +42,7 @@ void main() {
     });
 
     test('Shroom set Occupied name throws exeption', () async {
-      Shroom shroom = Shroom(name: 'test');
+      Shroom(name: 'test');
       expect(() => Shroom().name = 'test', throwsException);
     });
 
@@ -79,22 +77,18 @@ void main() {
             ShroomData('int', 1),
             ShroomData('int', 2),
             ShroomData('list', [
-              // ShroomData('list', [
-                ShroomData('string', 'string'),
-              // ]),
-          ]),
-          // ])
+              ShroomData('list', [
+              ShroomData('string', 'string'),
+              ]),
+            ]),
+            // ])
           ]));
 
-          await Future.delayed(Duration(seconds: 1), () {
-            
-          });
+      // await Future.delayed(Duration(seconds: 1), () {});
       Shroom shroom2 = Shroom(name: 'test');
       print(shroom2.data['test']!);
 
-      
-
-      expect(shroom2.data['test']==shroom.data['test'], true);
+      expect(shroom2.data['test'].toString()==shroom.data['test'].toString(), true);
     });
 
     test('Shroom Remove Data', () async {

@@ -2,9 +2,8 @@ import 'package:shroom/src/models/shroom_data.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 extension Value on Database {
-
-    ShroomData _getSubList(int superListItemID) {
-      print("getSubList: $superListItemID");
+  ShroomData _getSubList(int superListItemID) {
+    //print("getSubList: $superListItemID");
     String sql = 'SELECT * FROM list_item WHERE super_list_item_id = ?';
     final stmt = prepare(sql);
     final result = stmt.select([superListItemID]);
@@ -16,8 +15,8 @@ extension Value on Database {
         data[item["position"]] = (getValue(item['ValueType'], item['ValueID']));
       }
     }
-    print(result);
-    print("got sub list: ${data}");
+    //print(result);
+    //print("got sub list: ${data}");
     return ShroomData('list', data.values.toList());
   }
 
@@ -36,25 +35,23 @@ extension Value on Database {
     String sql = 'SELECT * FROM list_item WHERE leaf_id = ?';
     final stmt = prepare(sql);
     final result = stmt.select([leafID]);
-    print("retrieved top level list: ${result.length}");
+    //print("retrieved top level list: ${result.length}");
     Map<int, ShroomData> data = {};
     for (var item in result) {
-      print("retrieved top level list item: ${item['position']} $item");
-      try{
-
+      //print("retrieved top level list item: ${item['position']} $item");
+      try {
         if (item['ValueType'] == 'list') {
           data[item["position"] as int] = _getSubList(item['id']);
         } else {
-          data[item["position"] as int] = getValue(item['ValueType'], item['ValueID']);
+          data[item["position"] as int] =
+              getValue(item['ValueType'], item['ValueID']);
         }
-      }catch(e){
-          print(e);
-        }
+      } catch (e) {
+        //print(e);
+      }
     }
     return ShroomData('list', data.values.toList());
   }
-
-
 
   int saveValue(String tableName, ShroomData value) {
     String sql = 'INSERT INTO $tableName (value) VALUES (?)';
@@ -64,16 +61,16 @@ extension Value on Database {
   }
 
   saveList(int leafID, List<ShroomData> list) {
-    print("saveList: list length: ${list.length}");
+    //print("saveList: list length: ${list.length}");
     //insert list items into list_item
     for (int i = 0; i < list.length; i++) {
       ShroomData item = list[i];
-      print("saveList: $i ${item.type}");
+      //print("saveList: $i ${item.type}");
       if (item.type == 'list') {
-        print("add leaf: add 2+ level sub list");
+        //print("add leaf: add 2+ level sub list");
         String sql =
             'INSERT INTO list_item (leaf_id, ValueType, position) VALUES (?, ?, ?)';
-        execute(sql,[leafID, item.type, i]);
+        execute(sql, [leafID, item.type, i]);
         int susperListItemID = lastInsertRowId;
         _saveSubList(susperListItemID, item.value);
       } else {
@@ -86,20 +83,20 @@ extension Value on Database {
   }
 
   _saveSubList(int superListItemID, List<ShroomData> list) {
-    print("save sub list superListItemID: $superListItemID");
+    //print("save sub list superListItemID: $superListItemID");
     //insert list items into list_item
     for (int i = 0; i < list.length; i++) {
-      print("saveSubList: $i");
+      //print("saveSubList: $i");
       ShroomData item = list[i];
       if (item.type == 'list') {
         String sql =
             'INSERT INTO list_item (super_list_item_id, ValueType, position) VALUES (?, ?, ?)';
         execute(sql, [superListItemID, item.type, i]);
-        int newSuperListItemID =  lastInsertRowId;
+        int newSuperListItemID = lastInsertRowId;
         _saveSubList(newSuperListItemID, item.value);
       } else {
         //print save sub list item value: position
-        print("saveSubList: $i ${item.type}");
+        //print("saveSubList: $i ${item.type}");
         int valueID = saveValue(item.tableName, item);
         String sql =
             'INSERT INTO list_item (super_list_item_id, ValueID, ValueType, position) VALUES (?, ?, ?, ?)';
@@ -110,8 +107,7 @@ extension Value on Database {
   }
 
   deleteValue(String type, int id) {
-    String sql =
-        'DELETE FROM ${ShroomData.getTableName(type)} WHERE id = ?';
+    String sql = 'DELETE FROM ${ShroomData.getTableName(type)} WHERE id = ?';
     final stmt = prepare(sql);
     stmt.execute([id]);
     stmt.dispose();
@@ -133,7 +129,6 @@ extension Value on Database {
   }
 
   _deleteSubList(int superListItemID) {
-  
     //find all the list items associated with this super_list_item_id
     String sql = 'SELECT * FROM list_item WHERE super_list_item_id = ?';
     final stmt = prepare(sql);
