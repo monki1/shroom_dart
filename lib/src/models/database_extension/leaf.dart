@@ -7,7 +7,6 @@ import 'package:shroom/src/models/database_extension/list.dart';
 extension LeafDatabase on Database {
   int addLeaf(int mushroomID, int treeID, ShroomData value) {
     if (value.type == 'list') {
-      //print("add leaf: add top level list");
       final insertSql =
           'INSERT INTO Leaves (MushroomID, ValueType, TreeID) VALUES (?, ?, ?)';
       final insertStmt = prepare(insertSql);
@@ -19,7 +18,6 @@ extension LeafDatabase on Database {
     } else {
       return _addLeafValue(mushroomID, treeID, value);
     }
-    // }
   }
 
   int _addLeafValue(int mushroomID, int treeID, ShroomData value) {
@@ -28,7 +26,6 @@ extension LeafDatabase on Database {
         'INSERT INTO Leaves (MushroomID, ValueType, ValueID, TreeID) VALUES (?, ?, ?, ?)';
     final insertStmt = prepare(insertSql);
     insertStmt.execute([mushroomID, value.type, dataID, treeID]);
-    // insertStmt.dispose();
     return lastInsertRowId;
   }
 
@@ -77,7 +74,6 @@ extension LeafDatabase on Database {
     final stmt = prepare(sql);
     final result = stmt.select([mushroomID]);
     Map<String, ShroomData> leaves = {};
-    //print("top level leaves: $result");
 
     for (int i = 0; i < result.length; i++) {
       final leaf = result[i];
