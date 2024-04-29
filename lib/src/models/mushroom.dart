@@ -3,6 +3,12 @@ import 'package:shroom/src/models/database_extension/database_extension.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 class Mushroom {
+  static late Database _db;
+  static void setDB(Database db) {
+    _db = db;
+  }
+
+  late int id;
   final Map<String, ShroomData> _data = {};
   Map<String, ShroomData> get data => _data;
   String? _name;
@@ -15,13 +21,6 @@ class Mushroom {
       _name = null;
       _db.deleteName(id);
     }
-  }
-
-  late int id;
-  static String tableName = 'Mushrooms';
-  static late Database _db;
-  static void setDB(Database db) {
-    _db = db;
   }
 
   Mushroom({int? id, String? name}) {
@@ -53,6 +52,48 @@ class Mushroom {
     return;
   }
 
+  Mushroom.get({int? id, String? name}) {
+    if (name != null) {
+      _name = name;
+      try {
+        this.id = _db.getMushroomIDfromName(name);
+      } catch (e) {
+        throw Exception('Mushroom with name $name not found');
+      }
+    } else if (id != null) {
+      if (_db.checkMushroomExists(id) == false) {
+        throw Exception('Mushroom with id $id not found');
+      }
+      this.id = id;
+      //try to get the name from the database
+      try {
+        _name = _db.getNameFromMushroomID(id);
+      } catch (e) {
+        _name = null;
+      }
+    } else {
+      throw Exception('Mushroom not found');
+    }
+    _data.addAll(_db.getLeaves(this.id));
+    return;
+  }
+
+  Mushroom.create(String? name) {
+    if (name != null) {
+      _name = name;
+      try {
+        _db.getMushroomIDfromName(name);
+        throw Exception('Mushroom with name $name already exists');
+      } catch (e) {
+        id = _db.createEmptyMushroom();
+        this.name = name;
+      }
+    } else {
+      id = _db.createEmptyMushroom();
+    }
+    _data.addAll(_db.getLeaves(id));
+    return;
+  }
   //IMPLEMENT : function addLeaf(Leaf): check if leaf from the same tree exists. if yes then remove the previous leaf first, add mycelium to the database,
   upsert(String treeName, ShroomData data) {
     //if tree name exists in the data, remove the leaf first
