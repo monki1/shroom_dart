@@ -1,8 +1,5 @@
 import 'package:shroom/shroom.dart';
-import 'package:shroom/src/models/database_extension/leaf.dart';
-import 'package:shroom/src/models/database_extension/name.dart';
-import 'package:shroom/src/models/database_extension/tree.dart';
-import 'package:shroom/src/models/database_extension/mushroom.dart';
+import 'package:shroom/src/models/database_extension/database_extension.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 class Mushroom {
